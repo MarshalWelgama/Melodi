@@ -2,7 +2,7 @@
     display: grid;
     place-items: center;
     height: 100vh;
-    background-color: black;
+    background-color: #191414;
 
 }
 .login-button {
@@ -25,4 +25,14 @@
 
 .login-page > a {
     text-decoration: none;
+}
+
+.form-box {
+    color: black    ;
+    padding:20px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 24px;
 }
