@@ -1,0 +1,28 @@
+.login-page{
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    background-color: black;
+
+}
+.login-button {
+    
+    color: white    ;
+    padding:20px;
+    margin-bottom: 20px;
+    background-color: #1db954;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 24px;
+
+
+}
+.logo-img {
+    width: 50%;
+    margin-top: 10px
+
+}
+
+.login-page > a {
+    text-decoration: none;
+}
