@@ -7,9 +7,21 @@
 
 }
 .info-text{
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     color: white;
 }
+
+.hover-text {
+    color: #1db954;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.mytooltip > .tooltip-inner {
+    max-width: 600px;
+    /* height: 300px; */
+
+  }
 .login-button {
     
     color: white    ;
