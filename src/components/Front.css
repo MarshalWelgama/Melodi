@@ -17,7 +17,7 @@
     margin-top: 5px;
 }
 
-.mytooltip > .tooltip-inner {
+.tooltip-info > .tooltip-inner {
     max-width: 600px;
     /* height: 300px; */
 
