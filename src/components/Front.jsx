@@ -9,10 +9,9 @@ class Logo extends Component {
             
             <div className="login-page">
             <img className="logo-img" src="/logo.png" ></img>
-           
             <div className="description-text">
-               
-            <input className="form-box py-4 mb-5" type="email" id="email" placeholder="       Enter Your Email" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"/>
+            <h2 className="info-text">Join the Waitlist to stay updated</h2>
+            <input className="form-box py-4" type="email" id="email" placeholder="       Enter Your Email" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"/>
             </div>
         
             {/* <a className="login-button">LOGIN WITH SPOTIFY</a> */}
