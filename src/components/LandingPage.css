@@ -1,0 +1,53 @@
+.login-page {
+  display: grid;
+  grid-template-rows: 1fr 0.5fr;
+  place-items: center;
+  height: 100vh;
+  background-color: #191414;
+}
+.info-text {
+  margin-bottom: 20px;
+  color: white;
+}
+
+.hover-text {
+  color: #1db954;
+  font-size: 20px;
+  margin-top: 5px;
+}
+
+.tooltip-info > .tooltip-inner {
+  max-width: 600px;
+  /* height: 300px; */
+}
+.login-button {
+  color: white;
+  padding: 20px;
+
+  background-color: #1db954;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 24px;
+
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+}
+
+.logo-img {
+  width: 50%;
+  margin-top: 60px;
+}
+
+.login-page > a {
+  text-decoration: none;
+}
+
+.form-box {
+  color: black;
+  padding: 20px;
+  /* margin-bottom: 5rem; */
+  background-color: white;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 24px;
+}

@@ -1,0 +1,26 @@
+.main-page {
+  /* display: grid;
+  grid-template-rows: 1fr 0.5fr; */
+  place-items: center;
+  height: 100vh;
+  background-color: #191414;
+  /* overflow: hidden; */
+}
+
+.info-text {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.main-button {
+  color: white;
+  padding: 20px;
+
+  background-color: #1db954;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 24px;
+
+  margin-top: 1rem;
+}

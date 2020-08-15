@@ -1,12 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Front from './components/Front';
+import React from "react";
+import "./App.css";
+import LandingPage from "./components/LandingPage";
+import Main from "./components/Main";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <Front></Front>
+      <Router>
+        <Switch>
+          <Route path="/" exact component={LandingPage} />
+          <Route path="/main" component={Main} />
+        </Switch>
+      </Router>
     </div>
   );
 }
