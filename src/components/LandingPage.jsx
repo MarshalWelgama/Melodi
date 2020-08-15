@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import "./Front.css";
+import "./LandingPage.css";
 import "bootstrap/dist/css/bootstrap.css";
 import Tooltip from "react-bootstrap/Tooltip";
 import { OverlayTrigger, Button } from "react-bootstrap";
-class Logo extends Component {
+class LandingPage extends Component {
   state = {};
   render() {
     return (
@@ -48,4 +48,4 @@ class Logo extends Component {
   }
 }
 
-export default Logo;
+export default LandingPage;
