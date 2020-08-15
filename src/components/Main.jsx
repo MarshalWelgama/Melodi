@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-
+import "./Main.css";
 import SpotifyWebApi from "spotify-web-api-js";
+
 const spotifyApi = new SpotifyWebApi();
 
 class Main extends Component {
@@ -54,16 +55,35 @@ class Main extends Component {
 
   render() {
     return (
-      <div className="main">
-        <div>Now Playing: {this.state.nowPlaying.name}</div>
-        <div>
-          <img src={this.state.nowPlaying.albumArt} style={{ height: 150 }} />
+      <div className="main-page container-fluid justify-content-center">
+        <div
+          className="row justify-content-center p-4"
+          style={{ height: "50%" }}
+        >
+          <img
+            src={this.state.nowPlaying.albumArt}
+            style={{ maxWidth: "100%", maxHeight: "100%" }}
+          />
         </div>
-        {this.state.loggedIn && (
-          <button onClick={() => this.getNowPlaying()}>
-            Check Now Playing
-          </button>
-        )}
+        <div className="row my-auto" style={{ height: "50%" }}>
+          <div className="col">
+            <div className="row justify-content-center">
+              <h2 className="info-text">
+                Now Playing: {this.state.nowPlaying.name}
+              </h2>
+            </div>
+            <div className="row justify-content-center">
+              {this.state.loggedIn && (
+                <button
+                  className="main-button"
+                  onClick={() => this.getNowPlaying()}
+                >
+                  Check Now Playing
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
