@@ -8,4 +8,4 @@ const commentSchema = new mongoose.Schema({
   votes: { type: Number, required: true, default: 0 },
 });
 
-module.exports = mongoose.model("Song", commentSchema);
+module.exports = mongoose.model("Comment", commentSchema);
