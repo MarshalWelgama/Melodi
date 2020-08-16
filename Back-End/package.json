@@ -11,6 +11,8 @@
     "cors": "^2.8.5",
     "express": "^4.15.4",
     "querystring": "^0.2.0",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "spotify-web-api-node": "^4.0.0",
+    "xmlhttprequest": "^1.8.0"
   }
 }

@@ -12,10 +12,21 @@ var request = require("request"); // "Request" library
 var cors = require("cors");
 var querystring = require("querystring");
 var cookieParser = require("cookie-parser");
+var SpotifyWebApi = require("spotify-web-api-node");
 
 var client_id = "3b5576f93c1f4677856be16b0ef60fd8"; // Your client id
 var client_secret = "91dac900482144dfa9ca56d8afabcc96"; // Your secret
 var redirect_uri = "http://localhost:8888/callback"; // Your redirect uri
+
+// credentials are optional
+var spotifyApi = new SpotifyWebApi({
+  clientId: client_id,
+  clientSecret: client_secret,
+  redirectUri: redirect_uri,
+});
+
+var access_token = "",
+  refresh_token = "";
 
 /**
  * Generates a random string containing numbers and letters
@@ -69,12 +80,9 @@ app.get("/callback", function (req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect(
-      "/#" +
-        querystring.stringify({
-          error: "state_mismatch",
-        })
-    );
+    res.json({
+      error: "state_mismatch",
+    });
   } else {
     res.clearCookie(stateKey);
     var authOptions = {
@@ -94,35 +102,27 @@ app.get("/callback", function (req, res) {
 
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        var access_token = body.access_token,
-          refresh_token = body.refresh_token;
+        access_token = body.access_token;
+        refresh_token = body.refresh_token;
+        spotifyApi.setAccessToken(access_token);
 
-        var options = {
-          url: "https://api.spotify.com/v1/me",
-          headers: { Authorization: "Bearer " + access_token },
-          json: true,
-        };
+        // var options = {
+        //   url: "https://api.spotify.com/v1/me",
+        //   headers: { Authorization: "Bearer " + access_token },
+        //   json: true,
+        // };
 
         // use the access token to access the Spotify Web API
-        request.get(options, function (error, response, body) {
-          console.log(body);
-        });
+        // request.get(options, function (error, response, body) {
+        //   console.log(body);
+        // });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect(
-          "http://localhost:3000/main/#" +
-            querystring.stringify({
-              access_token: access_token,
-              refresh_token: refresh_token,
-            })
-        );
+        res.redirect("http://localhost:3000/main/");
       } else {
-        res.redirect(
-          "/#" +
-            querystring.stringify({
-              error: "invalid_token",
-            })
-        );
+        res.json({
+          error: "invalid_token",
+        });
       }
     });
   }
@@ -153,6 +153,64 @@ app.get("/refresh_token", function (req, res) {
       });
     }
   });
+});
+
+app.get("/user", function (req, res) {
+  let userData = {
+    id: "",
+    name: "",
+    email: "",
+    countryCode: "",
+    image: "",
+    link: "",
+  };
+  console.log("Access token in /user - ", access_token);
+  console.log("Refresh token in /user - ", refresh_token);
+
+  spotifyApi
+    .getMe()
+    .then((response) => {
+      if (response) {
+        console.log("getMe Response - ", response);
+        userData = {
+          id: response.body.id,
+          name: response.body.display_name,
+          email: response.body.email,
+          countryCode: response.body.country,
+          image: response.body.images,
+          link: response.body.external_urls.spotify,
+        };
+      }
+      res.json(userData);
+    })
+    .catch((error) => {
+      res.json(error);
+    });
+});
+
+app.get("/nowplaying", function (req, res) {
+  let nowPlaying = {
+    name: "Nothing playing at the moment",
+    albumArt: "",
+  };
+  console.log("Access token in /user - ", access_token);
+  console.log("Refresh token in /user - ", refresh_token);
+
+  spotifyApi
+    .getMyCurrentPlaybackState()
+    .then((response) => {
+      if (response) {
+        console.log("getMyCurrentPlaybackState Response - ", response);
+        nowPlaying = {
+          name: response.body.item.name,
+          albumArt: response.body.item.album.images[0].url,
+        };
+      }
+      res.json(nowPlaying);
+    })
+    .catch((error) => {
+      res.json(error);
+    });
 });
 
 console.log("Listening on 8888");
