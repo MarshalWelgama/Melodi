@@ -9,11 +9,14 @@ router.get("/:id", getComment, (req, res) => {
 
 // Creating a comment
 router.post("/", async (req, res) => {
-  const comment = new Comment({
-    userId: req.query.userId,
+  let currentUserId = await getCurrentUserId();
+  let commentData = {
+    userId: currentUserId,
     text: req.query.text,
     songId: req.query.songId,
-  });
+  };
+  console.log(commentData);
+  const comment = new Comment(commentData);
 
   try {
     const newComment = await comment.save();
@@ -64,6 +67,15 @@ async function getComment(req, res, next) {
 
   res.comment = comment;
   next();
+}
+
+async function getCurrentUserId() {
+  let spotifyRes = await spotifyApi.getMe();
+  if (spotifyRes) {
+    return spotifyRes.body.id;
+  } else {
+    return "";
+  }
 }
 
 module.exports = router;
