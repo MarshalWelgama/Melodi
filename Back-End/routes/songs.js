@@ -1,56 +1,44 @@
 const express = require("express");
 const router = express.Router();
 const Song = require("../models/song");
-
-// Getting all songs
-// router.get("/", async (req, res) => {
-//   try {
-//     const users = await User.find();
-//     res.json(users);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// });
+const Comment = require("../models/comment");
 
 // Getting current song
-router.get("/current", function (req, res) {
+router.get("/current", async function (req, res) {
   let nowPlaying = {
     name: "Nothing playing at the moment",
     albumArt: "",
   };
 
-  spotifyApi
-    .getMyCurrentPlaybackState()
-    .then((response) => {
-      console.log("Song response - ", response);
-      if (response) {
-        nowPlaying = {
-          id: response.body.item.id,
-          name: response.body.item.name,
-          albumArt: response.body.item.album.images[0].url,
-          previewURL: response.body.item.preview_url,
-        };
-      }
-      res.json(nowPlaying);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
+  let spotifyRes = await spotifyApi.getMyCurrentPlaybackState();
+  if (spotifyRes) {
+    nowPlaying = {
+      id: spotifyRes.body.item.id,
+      name: spotifyRes.body.item.name,
+      albumArt: spotifyRes.body.item.album.images[0].url,
+      previewURL: spotifyRes.body.item.preview_url,
+      comments: [],
+    };
+    let comments = await getSongComments(spotifyRes.body.item.id);
+    nowPlaying.comments = comments;
+
+    res.json(nowPlaying);
+  } else {
+    res.json(nowPlaying);
+  }
 });
 
-// async function getUser(req, res, next) {
-//   let user;
-//   try {
-//     user = await User.findById(req.params.id);
-//     if (user == null) {
-//       return res.status(404).json({ message: "Cannot find user" });
-//     }
-//   } catch (err) {
-//     return res.status(500).json({ message: err.message });
-//   }
-
-//   res.user = user;
-//   next();
-// }
+async function getSongComments(id) {
+  let comments;
+  try {
+    comments = await Comment.find({ songId: id });
+    if (comments == null) {
+      return { message: "Cannot find comments" };
+    }
+    return comments;
+  } catch (err) {
+    return { message: err.message };
+  }
+}
 
 module.exports = router;

@@ -27,7 +27,6 @@ router.get("/current", function (req, res) {
     .getMe()
     .then((response) => {
       if (response) {
-        console.log("getMe Response - ", response);
         userData = {
           id: response.body.id,
           name: response.body.display_name,

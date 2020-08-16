@@ -99,13 +99,6 @@ app.get("/callback", function (req, res) {
   // your application requests refresh and access tokens
   // after checking the state parameter
 
-  console.log(req.query);
-  console.log(req.query.code);
-  console.log(req.query.state);
-  console.log(req.cookies);
-  console.log(stateKey);
-  // console.log(req.cookies[stateKey]);
-
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
