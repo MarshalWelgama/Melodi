@@ -7,19 +7,22 @@
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
 
+require("dotenv").config();
 var express = require("express"); // Express web server framework
 var request = require("request"); // "Request" library
 var cors = require("cors");
 var querystring = require("querystring");
 var cookieParser = require("cookie-parser");
 var SpotifyWebApi = require("spotify-web-api-node");
+var mongoose = require("mongoose");
+var bodyParser = require("body-parser");
 
-var client_id = "3b5576f93c1f4677856be16b0ef60fd8"; // Your client id
-var client_secret = "91dac900482144dfa9ca56d8afabcc96"; // Your secret
-var redirect_uri = "http://localhost:8888/callback"; // Your redirect uri
+var client_id = process.env.CLIENT_ID;
+var client_secret = process.env.CLIENT_SECRET;
+var redirect_uri = process.env.REDIRECT_URI;
 
 // credentials are optional
-var spotifyApi = new SpotifyWebApi({
+spotifyApi = new SpotifyWebApi({
   clientId: client_id,
   clientSecret: client_secret,
   redirectUri: redirect_uri,
@@ -48,10 +51,24 @@ var stateKey = "spotify_auth_state";
 
 var app = express();
 
-app
-  .use(express.static(__dirname + "/public"))
-  .use(cors())
-  .use(cookieParser());
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on("error", (error) => {
+  console.error(error);
+});
+db.once("open", () => {
+  console.log("Connected to database");
+});
+
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors());
+
+const usersRouter = require("./routes/users");
+app.use("/api/users", usersRouter);
 
 app.get("/login", function (req, res) {
   var state = generateRandomString(16);
@@ -59,6 +76,7 @@ app.get("/login", function (req, res) {
 
   // your application requests authorization
   var scope = "user-read-private user-read-email user-read-playback-state";
+
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -74,6 +92,13 @@ app.get("/login", function (req, res) {
 app.get("/callback", function (req, res) {
   // your application requests refresh and access tokens
   // after checking the state parameter
+
+  console.log(req.query);
+  console.log(req.query.code);
+  console.log(req.query.state);
+  console.log(req.cookies);
+  console.log(stateKey);
+  // console.log(req.cookies[stateKey]);
 
   var code = req.query.code || null;
   var state = req.query.state || null;
@@ -106,18 +131,6 @@ app.get("/callback", function (req, res) {
         refresh_token = body.refresh_token;
         spotifyApi.setAccessToken(access_token);
 
-        // var options = {
-        //   url: "https://api.spotify.com/v1/me",
-        //   headers: { Authorization: "Bearer " + access_token },
-        //   json: true,
-        // };
-
-        // use the access token to access the Spotify Web API
-        // request.get(options, function (error, response, body) {
-        //   console.log(body);
-        // });
-
-        // we can also pass the token to the browser to make requests from there
         res.redirect("http://localhost:3000/main/");
       } else {
         res.json({
@@ -153,39 +166,6 @@ app.get("/refresh_token", function (req, res) {
       });
     }
   });
-});
-
-app.get("/user", function (req, res) {
-  let userData = {
-    id: "",
-    name: "",
-    email: "",
-    countryCode: "",
-    image: "",
-    link: "",
-  };
-  console.log("Access token in /user - ", access_token);
-  console.log("Refresh token in /user - ", refresh_token);
-
-  spotifyApi
-    .getMe()
-    .then((response) => {
-      if (response) {
-        console.log("getMe Response - ", response);
-        userData = {
-          id: response.body.id,
-          name: response.body.display_name,
-          email: response.body.email,
-          countryCode: response.body.country,
-          image: response.body.images,
-          link: response.body.external_urls.spotify,
-        };
-      }
-      res.json(userData);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
 });
 
 app.get("/nowplaying", function (req, res) {

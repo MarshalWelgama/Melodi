@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+# REST Client route.rest file for API testing
+route.rest
+

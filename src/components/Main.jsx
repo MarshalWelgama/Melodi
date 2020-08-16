@@ -20,8 +20,7 @@ class Main extends Component {
   }
 
   getUserDetails = async () => {
-    let userData = await axios.get("http://localhost:8888/user");
-    console.log(userData.data);
+    let userData = await axios.get("http://localhost:8888/api/users/current");
     if (userData.data.id) {
       this.setState({ loggedIn: true });
     } else {
@@ -32,7 +31,6 @@ class Main extends Component {
 
   getNowPlaying = async () => {
     let nowPlayingData = await axios.get("http://localhost:8888/nowplaying");
-    console.log(nowPlayingData.data);
     if (nowPlayingData.data) {
       let nowPlaying = {
         name: nowPlayingData.data.name,
