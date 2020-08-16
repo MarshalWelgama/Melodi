@@ -22,10 +22,13 @@ router.get("/current", function (req, res) {
   spotifyApi
     .getMyCurrentPlaybackState()
     .then((response) => {
+      console.log("Song response - ", response);
       if (response) {
         nowPlaying = {
+          id: response.body.item.id,
           name: response.body.item.name,
           albumArt: response.body.item.album.images[0].url,
+          previewURL: response.body.item.preview_url,
         };
       }
       res.json(nowPlaying);

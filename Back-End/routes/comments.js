@@ -10,10 +10,9 @@ router.get("/:id", getComment, (req, res) => {
 // Creating a comment
 router.post("/", async (req, res) => {
   const comment = new Comment({
-    id: req.query.id,
-    user: req.query.user,
+    userId: req.query.userId,
     text: req.query.text,
-    song: req.query.song,
+    songId: req.query.songId,
   });
 
   try {
@@ -24,10 +23,14 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Updating a comment - changing text or replying to it
+// Updating a comment - changing text or liking it
 router.patch("/:id", getComment, async (req, res) => {
   if (req.query.text != null) {
     res.comment.text = req.query.text;
+  }
+
+  if (req.query.votes != null) {
+    res.comment.votes += 1;
   }
 
   try {
