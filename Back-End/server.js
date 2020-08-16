@@ -70,6 +70,9 @@ app.use(cors());
 const usersRouter = require("./routes/users");
 app.use("/api/users", usersRouter);
 
+const songsRouter = require("./routes/songs");
+app.use("/api/songs", songsRouter);
+
 app.get("/login", function (req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);

@@ -30,7 +30,9 @@ class Main extends Component {
   };
 
   getNowPlaying = async () => {
-    let nowPlayingData = await axios.get("http://localhost:8888/nowplaying");
+    let nowPlayingData = await axios.get(
+      "http://localhost:8888/api/songs/current"
+    );
     if (nowPlayingData.data) {
       let nowPlaying = {
         name: nowPlayingData.data.name,
