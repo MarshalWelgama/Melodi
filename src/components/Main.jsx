@@ -11,10 +11,6 @@ class Main extends Component {
     nowPlaying: { name: "Not Checked", albumArt: "" },
   };
 
-  constructor() {
-    super();
-  }
-
   componentDidMount() {
     this.getUserDetails();
   }

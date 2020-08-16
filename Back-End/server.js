@@ -73,6 +73,9 @@ app.use("/api/users", usersRouter);
 const songsRouter = require("./routes/songs");
 app.use("/api/songs", songsRouter);
 
+const commentsRouter = require("./routes/comments");
+app.use("/api/comments", commentsRouter);
+
 app.get("/login", function (req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -169,31 +172,6 @@ app.get("/refresh_token", function (req, res) {
       });
     }
   });
-});
-
-app.get("/nowplaying", function (req, res) {
-  let nowPlaying = {
-    name: "Nothing playing at the moment",
-    albumArt: "",
-  };
-  console.log("Access token in /user - ", access_token);
-  console.log("Refresh token in /user - ", refresh_token);
-
-  spotifyApi
-    .getMyCurrentPlaybackState()
-    .then((response) => {
-      if (response) {
-        console.log("getMyCurrentPlaybackState Response - ", response);
-        nowPlaying = {
-          name: response.body.item.name,
-          albumArt: response.body.item.album.images[0].url,
-        };
-      }
-      res.json(nowPlaying);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
 });
 
 console.log("Listening on 8888");
