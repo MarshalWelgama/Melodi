@@ -1,57 +1,45 @@
 import React, { Component } from "react";
 import "./Main.css";
 import SpotifyWebApi from "spotify-web-api-js";
+import axios from "axios";
 
 const spotifyApi = new SpotifyWebApi();
 
 class Main extends Component {
-  constructor() {
-    super();
-    const params = this.getHashParams();
-    console.log(params);
-    const token = params.access_token;
-    if (token) {
-      spotifyApi.setAccessToken(token);
-    }
-    this.state = {
-      loggedIn: token ? true : false,
-      nowPlaying: { name: "Not Checked", albumArt: "" },
-    };
+  state = {
+    loggedIn: false,
+    nowPlaying: { name: "Not Checked", albumArt: "" },
+  };
+
+  componentDidMount() {
+    this.getUserDetails();
   }
 
-  getHashParams() {
-    var hashParams = {};
-    var e,
-      r = /([^&;=]+)=?([^&;]*)/g,
-      q = window.location.hash.substring(1);
-    e = r.exec(q);
-    while (e) {
-      hashParams[e[1]] = decodeURIComponent(e[2]);
-      e = r.exec(q);
+  getUserDetails = async () => {
+    let userData = await axios.get("http://localhost:8888/api/users/current");
+    if (userData.data.id) {
+      this.setState({ loggedIn: true });
+    } else {
+      console.log("ELSE TRIGGERED");
     }
-    return hashParams;
-  }
+    return userData;
+  };
 
-  getNowPlaying() {
-    spotifyApi.getMyCurrentPlaybackState().then((response) => {
-      if (response) {
-        console.log("Response - ", response);
-        this.setState({
-          nowPlaying: {
-            name: response.item.name,
-            albumArt: response.item.album.images[0].url,
-          },
-        });
-      } else {
-        this.setState({
-          nowPlaying: {
-            name: "Nothing playing at the moment",
-            albumArt: "",
-          },
-        });
-      }
-    });
-  }
+  getNowPlaying = async () => {
+    let nowPlayingData = await axios.get(
+      "http://localhost:8888/api/songs/current"
+    );
+    if (nowPlayingData.data) {
+      let nowPlaying = {
+        name: nowPlayingData.data.name,
+        albumArt: nowPlayingData.data.albumArt,
+      };
+      this.setState({ nowPlaying });
+    } else {
+      console.log("ELSE TRIGGERED");
+    }
+    return nowPlayingData;
+  };
 
   render() {
     return (

@@ -7,15 +7,29 @@
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
 
+require("dotenv").config();
 var express = require("express"); // Express web server framework
 var request = require("request"); // "Request" library
 var cors = require("cors");
 var querystring = require("querystring");
 var cookieParser = require("cookie-parser");
+var SpotifyWebApi = require("spotify-web-api-node");
+var mongoose = require("mongoose");
+var bodyParser = require("body-parser");
 
-var client_id = "3b5576f93c1f4677856be16b0ef60fd8"; // Your client id
-var client_secret = "91dac900482144dfa9ca56d8afabcc96"; // Your secret
-var redirect_uri = "http://localhost:8888/callback"; // Your redirect uri
+var client_id = process.env.CLIENT_ID;
+var client_secret = process.env.CLIENT_SECRET;
+var redirect_uri = process.env.REDIRECT_URI;
+
+// credentials are optional
+spotifyApi = new SpotifyWebApi({
+  clientId: client_id,
+  clientSecret: client_secret,
+  redirectUri: redirect_uri,
+});
+
+var access_token = "",
+  refresh_token = "";
 
 /**
  * Generates a random string containing numbers and letters
@@ -37,10 +51,30 @@ var stateKey = "spotify_auth_state";
 
 var app = express();
 
-app
-  .use(express.static(__dirname + "/public"))
-  .use(cors())
-  .use(cookieParser());
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on("error", (error) => {
+  console.error(error);
+});
+db.once("open", () => {
+  console.log("Connected to database");
+});
+
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors());
+
+const usersRouter = require("./routes/users");
+app.use("/api/users", usersRouter);
+
+const songsRouter = require("./routes/songs");
+app.use("/api/songs", songsRouter);
+
+const commentsRouter = require("./routes/comments");
+app.use("/api/comments", commentsRouter);
 
 app.get("/login", function (req, res) {
   var state = generateRandomString(16);
@@ -48,6 +82,7 @@ app.get("/login", function (req, res) {
 
   // your application requests authorization
   var scope = "user-read-private user-read-email user-read-playback-state";
+
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -69,12 +104,9 @@ app.get("/callback", function (req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect(
-      "/#" +
-        querystring.stringify({
-          error: "state_mismatch",
-        })
-    );
+    res.json({
+      error: "state_mismatch",
+    });
   } else {
     res.clearCookie(stateKey);
     var authOptions = {
@@ -94,35 +126,15 @@ app.get("/callback", function (req, res) {
 
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        var access_token = body.access_token,
-          refresh_token = body.refresh_token;
+        access_token = body.access_token;
+        refresh_token = body.refresh_token;
+        spotifyApi.setAccessToken(access_token);
 
-        var options = {
-          url: "https://api.spotify.com/v1/me",
-          headers: { Authorization: "Bearer " + access_token },
-          json: true,
-        };
-
-        // use the access token to access the Spotify Web API
-        request.get(options, function (error, response, body) {
-          console.log(body);
-        });
-
-        // we can also pass the token to the browser to make requests from there
-        res.redirect(
-          "http://localhost:3000/main/#" +
-            querystring.stringify({
-              access_token: access_token,
-              refresh_token: refresh_token,
-            })
-        );
+        res.redirect("http://localhost:3000/main/");
       } else {
-        res.redirect(
-          "/#" +
-            querystring.stringify({
-              error: "invalid_token",
-            })
-        );
+        res.json({
+          error: "invalid_token",
+        });
       }
     });
   }
