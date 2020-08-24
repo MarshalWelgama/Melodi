@@ -22,25 +22,33 @@ All routes start with /api.
 
 ##### Get current user - /current
 
-returns {
-userId: { type: String, required: true },
-name: { type: String, required: true },
-email: { type: String, required: true },
-countryCode: { type: String, required: true },
-image: { type: String, required: false },
-link: { type: String, required: true },
+returns
+
+```
+{
+    userId: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    countryCode: { type: String, required: true },
+    image: { type: String, required: false },
+    link: { type: String, required: true },
 }
+```
 
 ##### Get specific user by id - /:id
 
-returns {
-userId: { type: String, required: true },
-name: { type: String, required: true },
-email: { type: String, required: true },
-countryCode: { type: String, required: true },
-image: { type: String, required: false },
-link: { type: String, required: true },
+returns
+
+```
+{
+    userId: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    countryCode: { type: String, required: true },
+    image: { type: String, required: false },
+    link: { type: String, required: true },
 }
+```
 
 ##### Updating a user's name, email, countryCode, image, link - PATCH /:id
 
@@ -52,25 +60,37 @@ Put whatever info you want to change in the query string. Any info not provided 
 
 ##### Get current song - /current
 
-returns {
-songId: { type: String, required: true },
-name: { type: String, required: true },
-albumArt: { type: String, required: true },
-previewURL: { type: String, required: false },
-comments: [],
+returns
+
+```
+{
+    songId: { type: String, required: true },
+    songName: { type: String, required: true },
+    artistsName: { type: Array, required: true },
+    albumName: { type: String, required: true },
+    albumArt: { type: String, required: true },
+    previewURL: { type: String, required: false },
+    comments: { type: Array, required: true, default: [] },
 }
+```
 
 Note that comments will be an empty array here to save computations. To get actual song comments, you must use the specific songId route
 
 ##### Get specific song - /:id
 
-returns {
-songId: { type: String, required: true },
-name: { type: String, required: true },
-albumArt: { type: String, required: true },
-previewURL: { type: String, required: false },
-comments: { type: Array, required: true, default: [] },
+returns
+
+```
+{
+    songId: { type: String, required: true },
+    songName: { type: String, required: true },
+    artistsName: { type: Array, required: true },
+    albumName: { type: String, required: true },
+    albumArt: { type: String, required: true },
+    previewURL: { type: String, required: false },
+    comments: { type: Array, required: true, default: [] },
 }
+```
 
 comments will be an empty array if there are none existing.
 
@@ -86,11 +106,15 @@ Provide the text to change or provide a non-empty votes field to upvote a commen
 
 ##### Get a comment - GET /:id
 
-returns {
-text: { type: String, required: true },
-votes: { type: Number, required: true, default: 0 },
-userId: { type: String, required: true },
-songId: { type: String, required: true },
+returns
+
+```
+{
+    text: { type: String, required: true },
+    votes: { type: Number, required: true, default: 0 },
+    userId: { type: String, required: true },
+    songId: { type: String, required: true },
 }
+```
 
 ##### Delete a comment - DELETE /:id
