@@ -35,6 +35,9 @@ class Main extends Component {
         albumArt: nowPlayingData.data.albumArt,
       };
       this.setState({ nowPlaying });
+      window.location.href = "http://localhost:3000/songs/".concat(
+        nowPlayingData.data.songId
+      );
     } else {
       console.log("ELSE TRIGGERED");
     }
