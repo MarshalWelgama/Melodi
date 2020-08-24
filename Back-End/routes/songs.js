@@ -10,22 +10,34 @@ router.get("/current", async function (req, res) {
     albumArt: "",
   };
 
-  let spotifyRes = await spotifyApi.getMyCurrentPlaybackState();
-  if (spotifyRes) {
-    nowPlaying = {
-      id: spotifyRes.body.item.id,
-      name: spotifyRes.body.item.name,
-      albumArt: spotifyRes.body.item.album.images[0].url,
-      previewURL: spotifyRes.body.item.preview_url,
-      comments: [],
-    };
-    let comments = await getSongComments(spotifyRes.body.item.id);
-    nowPlaying.comments = comments;
+  spotifyApi
+    .getMyCurrentPlaybackState()
+    .then((response) => {
+      if (response) {
+        nowPlaying = {
+          id: response.body.item.id,
+          name: response.body.item.name,
+          albumArt: response.body.item.album.images[0].url,
+          previewURL: response.body.item.preview_url,
+          comments: [],
+        };
+        getSongComments(response.body.item.id).then((response) => {
+          console.log("response inside getSongCOmments - ", response);
+          if (response.message) {
+            nowPlaying.comments = [];
+          } else {
+            nowPlaying.comments = response;
+          }
+        });
 
-    res.json(nowPlaying);
-  } else {
-    res.json(nowPlaying);
-  }
+        res.json(nowPlaying);
+      } else {
+        res.json(nowPlaying);
+      }
+    })
+    .catch((err) => {
+      console.log("Error when retrieving song - ", err);
+    });
 });
 
 async function getSongComments(id) {
