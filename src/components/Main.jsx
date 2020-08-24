@@ -17,7 +17,7 @@ class Main extends Component {
 
   getUserDetails = async () => {
     let userData = await axios.get("http://localhost:8888/api/users/current");
-    if (userData.data.id) {
+    if (userData.data.userId) {
       this.setState({ loggedIn: true });
     } else {
       console.log("ELSE TRIGGERED");
@@ -35,6 +35,9 @@ class Main extends Component {
         albumArt: nowPlayingData.data.albumArt,
       };
       this.setState({ nowPlaying });
+      window.location.href = "http://localhost:3000/songs/".concat(
+        nowPlayingData.data.songId
+      );
     } else {
       console.log("ELSE TRIGGERED");
     }
