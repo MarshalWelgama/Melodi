@@ -15,14 +15,13 @@ router.get("/current", async function (req, res) {
     .then((response) => {
       if (response) {
         nowPlaying = {
-          id: response.body.item.id,
+          songId: response.body.item.id,
           name: response.body.item.name,
           albumArt: response.body.item.album.images[0].url,
           previewURL: response.body.item.preview_url,
           comments: [],
         };
         getSongComments(response.body.item.id).then((response) => {
-          console.log("response inside getSongCOmments - ", response);
           if (response.message) {
             nowPlaying.comments = [];
           } else {
@@ -37,6 +36,13 @@ router.get("/current", async function (req, res) {
     })
     .catch((err) => {
       console.log("Error when retrieving song - ", err);
+      if (err.statusCode === 401) {
+        res.json({
+          name: "Unauthorised access - sign in using Spotify again",
+          albumArt: "",
+          message: "Unauthorised access - sign in using Spotify again",
+        });
+      }
     });
 });
 
