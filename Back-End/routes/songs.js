@@ -18,7 +18,7 @@ router.get("/current", async function (req, res) {
         nowPlaying = {
           songId: response.body.item.id,
           songName: response.body.item.name,
-          artistsName: response.body.item.artists,
+          artistsName: response.body.item.artists.map((artist) => artist.name),
           albumName: response.body.item.album.name,
           albumArt: response.body.item.album.images[0].url,
           previewURL: response.body.item.preview_url,
@@ -52,7 +52,7 @@ async function getSong(req, res, next) {
     song = {
       songId: songData.body.id,
       songName: songData.body.name,
-      artistsName: songData.body.artists,
+      artistsName: songData.body.artists.map((artist) => artist.name),
       albumName: songData.body.album.name,
       albumArt: songData.body.album.images[0].url,
       previewURL: songData.body.preview_url,
