@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 // Getting current user
 router.get("/current", function (req, res) {
   let userData = {
-    id: "",
+    userId: "",
     name: "",
     email: "",
     countryCode: "",
@@ -27,16 +27,28 @@ router.get("/current", function (req, res) {
     .getMe()
     .then((response) => {
       if (response) {
-        userData = {
-          id: response.body.id,
-          name: response.body.display_name,
-          email: response.body.email,
-          countryCode: response.body.country,
-          image: response.body.images,
-          link: response.body.external_urls.spotify,
-        };
+        User.find({ userId: response.body.id }, function (err, docs) {
+          if (docs.length > 0) {
+            res.json(docs[0]);
+          } else {
+            userData = {
+              userId: response.body.id,
+              name: response.body.display_name,
+              email: response.body.email,
+              countryCode: response.body.country,
+              image: response.body.images === [] ? "" : "",
+              link: response.body.external_urls.spotify,
+            };
+            User.create(userData, function (err, docs) {
+              if (err) {
+                console.log(err);
+              } else {
+                res.json(docs);
+              }
+            });
+          }
+        });
       }
-      res.json(userData);
     })
     .catch((error) => {
       res.json(error);
@@ -48,24 +60,24 @@ router.get("/:id", getUser, (req, res) => {
   res.json(res.user);
 });
 
-// Creating a user
-router.post("/", async (req, res) => {
-  const user = new User({
-    id: req.query.id,
-    name: req.query.name,
-    email: req.query.email,
-    countryCode: req.query.countryCode,
-    image: req.query.image,
-    link: req.query.link,
-  });
+// // Creating a user
+// router.post("/", async (req, res) => {
+//   const user = new User({
+//     id: req.query.id,
+//     name: req.query.name,
+//     email: req.query.email,
+//     countryCode: req.query.countryCode,
+//     image: req.query.image,
+//     link: req.query.link,
+//   });
 
-  try {
-    const newUser = await user.save();
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
+//   try {
+//     const newUser = await user.save();
+//     res.status(201).json(newUser);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// });
 
 // Updating a user
 router.patch("/:id", getUser, async (req, res) => {
@@ -106,7 +118,7 @@ router.delete("/:id", getUser, async (req, res) => {
 async function getUser(req, res, next) {
   let user;
   try {
-    user = await User.findById(req.params.id);
+    user = await User.find({ userId: req.params.id });
     if (user == null) {
       return res.status(404).json({ message: "Cannot find user" });
     }
