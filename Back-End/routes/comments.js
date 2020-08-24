@@ -14,6 +14,8 @@ router.post("/", async (req, res) => {
     userId: currentUserId,
     text: req.query.text,
     songId: req.query.songId,
+    dateTime: new Date().toLocaleString(),
+    editDateTime: "",
   };
   console.log(commentData);
   const comment = new Comment(commentData);
@@ -30,6 +32,7 @@ router.post("/", async (req, res) => {
 router.patch("/:id", getComment, async (req, res) => {
   if (req.query.text != null) {
     res.comment.text = req.query.text;
+    res.comment.editDateTime = new Date().toLocaleString();
   }
 
   if (req.query.votes != null) {
