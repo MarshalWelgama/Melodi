@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import "./Main.css";
-import SpotifyWebApi from "spotify-web-api-js";
 import axios from "axios";
-
-const spotifyApi = new SpotifyWebApi();
 
 class Main extends Component {
   state = {
