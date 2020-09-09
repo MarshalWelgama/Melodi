@@ -3,17 +3,20 @@ const router = express.Router();
 const Comment = require("../models/comment");
 
 // Getting a comment
-router.get("/:id", getComment, (req, res) => {
+router.get("/", getComment, (req, res) => {
   res.json(res.comment);
 });
 
 // Creating a comment
 router.post("/", async (req, res) => {
   let currentUserId = await getCurrentUserId();
+  console.log(req.query);
   let commentData = {
     userId: currentUserId,
     text: req.query.text,
     songId: req.query.songId,
+    dateTime: new Date().toLocaleString(),
+    editDateTime: "",
   };
   console.log(commentData);
   const comment = new Comment(commentData);
@@ -27,9 +30,10 @@ router.post("/", async (req, res) => {
 });
 
 // Updating a comment - changing text or liking it
-router.patch("/:id", getComment, async (req, res) => {
+router.patch("/", getComment, async (req, res) => {
   if (req.query.text != null) {
     res.comment.text = req.query.text;
+    res.comment.editDateTime = new Date().toLocaleString();
   }
 
   if (req.query.votes != null) {
@@ -45,7 +49,7 @@ router.patch("/:id", getComment, async (req, res) => {
 });
 
 // Deleting a comment
-router.delete("/:id", getComment, async (req, res) => {
+router.delete("/", getComment, async (req, res) => {
   try {
     await res.comment.remove();
     res.json({ message: "Deleted comment" });
@@ -57,7 +61,11 @@ router.delete("/:id", getComment, async (req, res) => {
 async function getComment(req, res, next) {
   let comment;
   try {
-    comment = await Comment.findById(req.params.id);
+    comment = await Comment.find({
+      songId: req.query.songId,
+      dateTime: req.query.dateTime,
+      userId: req.query.userId,
+    });
     if (comment == null) {
       return res.status(404).json({ message: "Cannot find comment" });
     }

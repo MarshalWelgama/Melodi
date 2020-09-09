@@ -6,17 +6,20 @@ const Comment = require("../models/comment");
 // Getting current song
 router.get("/current", async function (req, res) {
   let nowPlaying = {
-    name: "Nothing playing at the moment",
+    songName: "Nothing playing at the moment",
     albumArt: "",
   };
 
   spotifyApi
     .getMyCurrentPlaybackState()
     .then((response) => {
+      console.log("response.body - ", response.body);
       if (response.body) {
         nowPlaying = {
           songId: response.body.item.id,
-          name: response.body.item.name,
+          songName: response.body.item.name,
+          artistsName: response.body.item.artists.map((artist) => artist.name),
+          albumName: response.body.item.album.name,
           albumArt: response.body.item.album.images[0].url,
           previewURL: response.body.item.preview_url,
           comments: [],
@@ -48,7 +51,9 @@ async function getSong(req, res, next) {
     let songData = await spotifyApi.getTrack(req.params.id);
     song = {
       songId: songData.body.id,
-      name: songData.body.name,
+      songName: songData.body.name,
+      artistsName: songData.body.artists.map((artist) => artist.name),
+      albumName: songData.body.album.name,
       albumArt: songData.body.album.images[0].url,
       previewURL: songData.body.preview_url,
       comments: [],
