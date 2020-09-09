@@ -9,7 +9,7 @@ import { Form, Button } from "semantic-ui-react";
 
 
 class Song extends Component {
-  state = { song: { name: "Not Checked", artist: "Not Checked", albumArt: "", comments: []}};
+  state = { song: { name: "Not Checked", artist: [], albumArt: "", comments: []}};
 
   constructor(props) {
     super(props);
@@ -25,8 +25,8 @@ class Song extends Component {
     console.log(songData)
     if (songData.data) { 
       let song = {
-        name: songData.data.name,
-        artist: songData.data.artist,
+        name: songData.data.songName,
+        artist: songData.data.artistsName,
         albumArt: songData.data.albumArt,
         comments: songData.data.comments
       };

@@ -7,6 +7,7 @@ import 'semantic-ui-css/semantic.min.css'
 class CommentSingle extends Component {
     state = {  }
     render() { 
+       // https://api.spotify.com/v1/users/12142897666
         const {comment} = this.props
         return ( 
       <div style={{'display':'grid', 'justifyContent':'center'}}>
@@ -15,7 +16,7 @@ class CommentSingle extends Component {
             <Comment>
               <Comment.Avatar src='https://react.semantic-ui.com/images/avatar/small/matt.jpg' />
               <Comment.Content>
-                <Comment.Author as='a'>Marshal Welgama</Comment.Author>
+                <Comment.Author as='a' href={"https://open.spotify.com/user/".concat(comment.userId)}>Marshal Welgama</Comment.Author>
                 <Comment.Metadata>
                   <div>Today at 5:42PM</div>
                 </Comment.Metadata>
