@@ -3,6 +3,8 @@ import SpotifyWebApi from "spotify-web-api-js";
 import axios from "axios";
 import { withRouter } from "react-router";
 import Comments from "./Comments";
+import SongHeader from "./SongHeader";
+import { Form, Button } from "semantic-ui-react";
 
 
 
@@ -57,6 +59,7 @@ class Song extends Component {
     console.log(commentsArray);
     let commentsActive = (Array.isArray(commentsArray) && commentsArray.length);
     console.log(commentsActive)
+   
     return (
       // <div className="main-page container-fluid justify-content-center">
       //   <div
@@ -80,8 +83,20 @@ class Song extends Component {
       //     </div>
       //   </div>
       // </div>
+      
       <div className="main-page">
-      <Comments name={this.state.song.name} artist={this.state.song.artist} albumArt={this.state.song.albumArt} comments={this.state.song.comments}></Comments>
+      <SongHeader albumArt={this.state.song.albumArt} artist={this.state.song.artist} songName={this.state.song.name}/>
+      <Comments comments={this.state.song.comments}/>
+<div style={{'display':'grid', 'place-items':'center'}}>
+      <Form style={{'width':'500px'}} reply>
+      <Form.TextArea />
+      <Button content='Comment' labelPosition='right' icon='arrow right' />
+      
+    </Form>
+    </div>
+ 
+
+    
       </div>
     );
   }
