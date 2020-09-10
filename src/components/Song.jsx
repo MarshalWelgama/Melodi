@@ -87,8 +87,8 @@ class Song extends Component {
       <div className="main-page">
       <SongHeader albumArt={this.state.song.albumArt} artist={this.state.song.artist} songName={this.state.song.name}/>
       <Comments comments={this.state.song.comments}/>
-<div style={{'display':'grid', 'place-items':'center'}}>
-      <Form style={{'width':'500px'}} reply>
+      <div style={{'display':'grid', 'place-items':'center'}}>
+      <Form style={{'width':'500px', 'padding-top':'20px'}} reply>
       <Form.TextArea />
       <Button content='Comment' labelPosition='right' icon='arrow right' />
       

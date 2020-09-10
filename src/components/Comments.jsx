@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CommentSingle from './CommentSingle';
-import { Header } from 'semantic-ui-react'
+import { Header, Comment } from 'semantic-ui-react'
 class Comments extends Component {
     state = {  }
     renderComments() {
@@ -22,12 +22,16 @@ class Comments extends Component {
     render() { 
 
         return ( 
-            <React.Fragment>
-
+            <div style={{'display':'grid', 'justifyContent':'center'}}>
+                <Comment.Group threaded>
+            <Header as='h3' dividing>
+              All Comments
+            </Header>
             <div>
                 {this.renderComments()}
             </div>
-            </React.Fragment>
+            </Comment.Group>
+            </div>
          );
     }
 }
