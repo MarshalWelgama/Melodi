@@ -9,7 +9,11 @@ import { Form, Button } from "semantic-ui-react";
 
 
 class Song extends Component {
-  state = { active:false, song: { name: "Not Checked", artist: [], albumArt: "", comments: []}};
+  state = { 
+    active:false,
+    user: { name:"", image:"", userId:"", link:""}, 
+    song: { name: "Not Checked", artist: [], albumArt: "", comments: []}
+  };
 
   constructor(props) {
     super(props);
@@ -17,6 +21,28 @@ class Song extends Component {
     console.log("songId in constructor - ", songId);
     this.getSongDetails(songId);
   }
+  componentDidMount() {
+    this.getUserDetails();
+  }
+
+  getUserDetails = async () => {
+    let userData = await axios.get("http://localhost:8888/api/users/current");
+    let user
+    if (userData.data.userId) {
+      user= {
+        name: userData.data.name,
+        image: userData.data.image,
+        userId: userData.data.userId,
+        link: userData.data.link
+      }
+      this.setState({user})
+      console.log(this.state.user)
+     // this.setState({ loggedIn: true });
+    } else {
+      console.log("ELSE TRIGGERED");
+    }
+    return userData;
+  };
 
   getSongDetails = async (songId) => {
     let songData = await axios.get(
@@ -38,6 +64,7 @@ class Song extends Component {
   };
 
   renderComments() {
+    console.log(this.state.loggedIn)
     const comments = this.state.song.comments
     var prettyComments = []
     for (var i = 0; i < comments.length; i++) {
@@ -54,8 +81,11 @@ class Song extends Component {
       );
     }
     
-    handleClick = () =>
+    handleClick = () => {
     this.setState((prevState) => ({ active: !prevState.active }))
+      console.log(this.state)
+    }
+    
   render() {
     const commentsArray = this.state.song.comments
     console.log(commentsArray);
@@ -87,7 +117,7 @@ class Song extends Component {
       // </div>
       
       <div className="main-page">
-      <SongHeader albumArt={this.state.song.albumArt} artist={this.state.song.artist} songName={this.state.song.name}/>
+      <SongHeader albumArt={this.state.song.albumArt} artist={this.state.song.artist} songName={this.state.song.name} user={this.state.user}/>
       <Button toggle active={active} onClick={this.handleClick}>
         Toggle Replies
       </Button>

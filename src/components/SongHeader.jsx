@@ -13,14 +13,14 @@ class SongHeader extends Component {
           );
         }
     render() {
-        const { songName, artist, albumArt } = this.props
+        const { songName, artist, albumArt, user } = this.props
         console.log(artist);
         
         return (
             
             <Segment>
                 <Header as='h3' textAlign='left'>
-                    Logged in as: <a href="#">Marshal Welgama</a>
+        Logged in as: <a href={user.link}>{user.name}</a>
                 </Header>
                
                 <Header as='h2'>
