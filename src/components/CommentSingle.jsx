@@ -5,10 +5,10 @@ import { Button, Card, Comment, Form, Header, CommentGroup } from 'semantic-ui-r
 import 'semantic-ui-css/semantic.min.css'
 
 class CommentSingle extends Component {
-    state = {  }
+    state = { }
     renderReplies() {
-        const {comment} = this.props
-        if(false) { // check reply array length, if > 1 then return comments.
+        const {comment, replies} = this.props
+        if(replies) { // check reply array length, if > 1 then return comments.
             return (
                 // enclose comments within the CommentGroup (use map functoin)
                 <CommentGroup> 
@@ -19,7 +19,7 @@ class CommentSingle extends Component {
                     <Comment.Metadata>
                       <span>Just now</span>
                     </Comment.Metadata>
-                    <Comment.Text>Elliot you are always so right :)</Comment.Text>
+                    <Comment.Text>Testing a reply on a comment 1</Comment.Text>
                     <Comment.Actions>
                       <a>Reply</a>
                     </Comment.Actions>
@@ -33,7 +33,7 @@ class CommentSingle extends Component {
                     <Comment.Metadata>
                       <span>Just now</span>
                     </Comment.Metadata>
-                    <Comment.Text>Elliot you are always so right :)</Comment.Text>
+                    <Comment.Text>Testing reply on a comment 2</Comment.Text>
                     <Comment.Actions>
                       <a>Reply</a>
                     </Comment.Actions>

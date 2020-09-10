@@ -15,6 +15,7 @@ class Main extends Component {
   getUserDetails = async () => {
     let userData = await axios.get("http://localhost:8888/api/users/current");
     if (userData.data.userId) {
+      console.log(userData.data)
       this.setState({ loggedIn: true });
     } else {
       console.log("ELSE TRIGGERED");

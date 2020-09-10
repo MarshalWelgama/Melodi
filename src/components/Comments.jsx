@@ -4,7 +4,7 @@ import { Header, Comment } from 'semantic-ui-react'
 class Comments extends Component {
     state = {  }
     renderComments() {
-        const {comments} = this.props
+        const {comments, replies} = this.props
         var prettyComments = []
         for (var i = 0; i < comments.length; i++) {
           prettyComments.push(comments[i])
@@ -14,7 +14,7 @@ class Comments extends Component {
           return ( 
             <React.Fragment>
               {prettyComments.map(comment => (
-                <CommentSingle comment={comment}></CommentSingle>
+                <CommentSingle comment={comment} replies={replies}></CommentSingle>
               ))}
             </React.Fragment>
           );

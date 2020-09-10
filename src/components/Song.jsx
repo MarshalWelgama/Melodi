@@ -9,7 +9,7 @@ import { Form, Button } from "semantic-ui-react";
 
 
 class Song extends Component {
-  state = { song: { name: "Not Checked", artist: [], albumArt: "", comments: []}};
+  state = { active:false, song: { name: "Not Checked", artist: [], albumArt: "", comments: []}};
 
   constructor(props) {
     super(props);
@@ -53,13 +53,15 @@ class Song extends Component {
         </React.Fragment>
       );
     }
-  
+    
+    handleClick = () =>
+    this.setState((prevState) => ({ active: !prevState.active }))
   render() {
     const commentsArray = this.state.song.comments
     console.log(commentsArray);
     let commentsActive = (Array.isArray(commentsArray) && commentsArray.length);
     console.log(commentsActive)
-   
+    const active = this.state.active
     return (
       // <div className="main-page container-fluid justify-content-center">
       //   <div
@@ -86,7 +88,10 @@ class Song extends Component {
       
       <div className="main-page">
       <SongHeader albumArt={this.state.song.albumArt} artist={this.state.song.artist} songName={this.state.song.name}/>
-      <Comments comments={this.state.song.comments}/>
+      <Button toggle active={active} onClick={this.handleClick}>
+        Toggle Replies
+      </Button>
+      <Comments comments={this.state.song.comments} replies={this.state.active}/>
       <div style={{'display':'grid', 'place-items':'center'}}>
       <Form style={{'width':'500px', 'padding-top':'20px'}} reply>
       <Form.TextArea />
