@@ -7,8 +7,7 @@ const User = require("../models/user");
 // Getting current song
 router.get("/current", async function (req, res) {
   let nowPlaying = {
-    songName: "Nothing playing at the moment",
-    albumArt: "",
+    songId: "",
   };
 
   spotifyApi
@@ -17,12 +16,6 @@ router.get("/current", async function (req, res) {
       if (response.body) {
         nowPlaying = {
           songId: response.body.item.id,
-          songName: response.body.item.name,
-          artistsName: response.body.item.artists.map((artist) => artist.name),
-          albumName: response.body.item.album.name,
-          albumArt: response.body.item.album.images[0].url,
-          previewURL: response.body.item.preview_url,
-          comments: [],
         };
         res.json(nowPlaying);
       } else {
