@@ -61,12 +61,13 @@ async function getSong(req, res, next) {
     };
 
     let songComments = await getSongComments(req.params.id);
-    console.log("songComments - ", songComments);
     if (songComments.message) {
       song.comments = [];
     } else {
       song.comments = songComments;
     }
+
+    console.log(song.comments);
 
     res.song = song;
   } catch (err) {
@@ -88,7 +89,6 @@ async function getSongComments(id) {
 
     for (var i = 0; i < comments.length; i++) {
       userInfo = await User.find({ userId: comments[i].userId });
-      console.log("userInfo - ", userInfo);
       comments[i] = {
         ...comments[i].toObject(),
         userName: userInfo[0].name,

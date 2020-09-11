@@ -29,6 +29,7 @@ router.get("/current", function (req, res) {
       if (response) {
         User.find({ userId: response.body.id }, function (err, docs) {
           if (docs.length > 0) {
+            console.log(docs[0]);
             res.json(docs[0]);
           } else {
             userData = {
@@ -36,7 +37,8 @@ router.get("/current", function (req, res) {
               name: response.body.display_name,
               email: response.body.email,
               countryCode: response.body.country,
-              image: response.body.images === [] ? "" : "",
+              image:
+                response.body.images === [] ? "" : response.body.images[0].url,
               link: response.body.external_urls.spotify,
             };
             User.create(userData, function (err, docs) {
@@ -106,9 +108,9 @@ router.patch("/:id", getUser, async (req, res) => {
 });
 
 // Deleting a user
-router.delete("/:id", getUser, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
-    await res.user.remove();
+    await User.deleteOne({ userId: req.params.id });
     res.json({ message: "Deleted user" });
   } catch (err) {
     res.status(500).json({ message: err.message });
