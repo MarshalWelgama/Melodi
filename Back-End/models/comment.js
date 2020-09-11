@@ -5,6 +5,8 @@ const commentSchema = new mongoose.Schema({
   votes: { type: Number, required: true, default: 0 },
   userId: { type: String, required: true },
   songId: { type: String, required: true },
+  dateTime: { type: Date, required: true, default: Date.now },
+  editDateTime: { type: Date, required: false },
 });
 
 module.exports = mongoose.model("Comment", commentSchema);

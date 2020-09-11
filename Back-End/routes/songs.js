@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Song = require("../models/song");
 const Comment = require("../models/comment");
+const User = require("../models/user");
 
 // Getting current song
 router.get("/current", async function (req, res) {
@@ -13,7 +14,6 @@ router.get("/current", async function (req, res) {
   spotifyApi
     .getMyCurrentPlaybackState()
     .then((response) => {
-      console.log("response.body - ", response.body);
       if (response.body) {
         nowPlaying = {
           songId: response.body.item.id,
@@ -46,6 +46,7 @@ router.get("/:id", getSong, (req, res) => {
 });
 
 async function getSong(req, res, next) {
+  console.log("HERE");
   let song;
   try {
     let songData = await spotifyApi.getTrack(req.params.id);
@@ -60,7 +61,7 @@ async function getSong(req, res, next) {
     };
 
     let songComments = await getSongComments(req.params.id);
-
+    console.log("songComments - ", songComments);
     if (songComments.message) {
       song.comments = [];
     } else {
@@ -82,6 +83,20 @@ async function getSongComments(id) {
     if (comments == null) {
       return { message: "Cannot find comments" };
     }
+
+    let userInfo;
+
+    for (var i = 0; i < comments.length; i++) {
+      userInfo = await User.find({ userId: comments[i].userId });
+      console.log("userInfo - ", userInfo);
+      comments[i] = {
+        ...comments[i].toObject(),
+        userName: userInfo[0].name,
+        userImage: userInfo[0].image,
+        userLink: userInfo[0].link,
+      };
+    }
+
     return comments;
   } catch (err) {
     return { message: err.message };

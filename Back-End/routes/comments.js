@@ -3,8 +3,15 @@ const router = express.Router();
 const Comment = require("../models/comment");
 
 // Getting a comment
-router.get("/", getComment, (req, res) => {
-  res.json(res.comment);
+router.get("/:id", getComment, async (req, res) => {
+  let userInfo = await userInfo.find({ userId: req.query.userId });
+  console.log(userInfo);
+  let formattedComment = {
+    ...res.comment,
+    userName: userInfo.name,
+    userImage: userInfo.image,
+  };
+  res.json(formattedComment);
 });
 
 // Creating a comment
@@ -17,6 +24,7 @@ router.post("/", async (req, res) => {
     songId: req.query.songId,
     dateTime: new Date().toLocaleString(),
     editDateTime: "",
+    votes: 0,
   };
   console.log(commentData);
   const comment = new Comment(commentData);
@@ -30,7 +38,7 @@ router.post("/", async (req, res) => {
 });
 
 // Updating a comment - changing text or liking it
-router.patch("/", getComment, async (req, res) => {
+router.patch("/:id", getComment, async (req, res) => {
   if (req.query.text != null) {
     res.comment.text = req.query.text;
     res.comment.editDateTime = new Date().toLocaleString();
@@ -49,7 +57,7 @@ router.patch("/", getComment, async (req, res) => {
 });
 
 // Deleting a comment
-router.delete("/", getComment, async (req, res) => {
+router.delete("/:id", getComment, async (req, res) => {
   try {
     await res.comment.remove();
     res.json({ message: "Deleted comment" });
