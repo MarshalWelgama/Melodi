@@ -1,11 +1,24 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
 import axios from "axios";
 import { withRouter } from "react-router";
 import Comments from "./Comments";
 import SongHeader from "./SongHeader";
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, TextArea, Sticky, Ref } from "semantic-ui-react";
 
+const footerStyle = {
+  
+  backgroundColor: "white",
+  borderTop: "1px solid #E7E7E7",
+  textAlign: "center",
+  padding: "15px",
+  position: "fixed",
+  left: "0",
+  bottom: "0",
+  width: "100%", 
+  display: "grid",
+  placeItems: "center"
+};
 
 
 class Song extends Component {
@@ -14,6 +27,7 @@ class Song extends Component {
     user: { name:"", image:"", userId:"", link:""}, 
     song: { name: "Not Checked", artist: [], albumArt: "", comments: []}
   };
+  contextRef = createRef()
 
   constructor(props) {
     super(props);
@@ -21,9 +35,11 @@ class Song extends Component {
     console.log("songId in constructor - ", songId);
     this.getSongDetails(songId);
   }
+  
   componentDidMount() {
     this.getUserDetails();
   }
+  
 
   getUserDetails = async () => {
     let userData = await axios.get("http://localhost:8888/api/users/current");
@@ -44,6 +60,7 @@ class Song extends Component {
     return userData;
   };
 
+ 
   getSongDetails = async (songId) => {
     let songData = await axios.get(
       "http://localhost:8888/api/songs/".concat(songId)
@@ -85,6 +102,8 @@ class Song extends Component {
     this.setState((prevState) => ({ active: !prevState.active }))
       console.log(this.state)
     }
+
+    
     
   render() {
     const commentsArray = this.state.song.comments
@@ -122,14 +141,19 @@ class Song extends Component {
         Toggle Replies
       </Button>
       <Comments comments={this.state.song.comments} replies={this.state.active}/>
-      <div style={{'display':'grid', 'place-items':'center'}}>
-      <Form style={{'width':'500px', 'padding-top':'20px'}} reply>
-      <Form.TextArea />
-      <Button content='Comment' labelPosition='right' icon='arrow right' />
+ 
+    <div>
+        <div style={footerStyle}>
+        <Form style={{'width':'40%', 'padding-top':'10px'}} reply>
+      <TextArea />
+      <Button style={{'margin-top': '10px'}}content='Comment' labelPosition='right' icon='arrow right' />
       
     </Form>
-    </div>
- 
+
+        </div>
+      </div>
+
+      <div style={{'paddingBottom':'175px'}}/>
 
     
       </div>
