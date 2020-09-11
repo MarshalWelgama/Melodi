@@ -8,6 +8,7 @@ const commentSchema = new mongoose.Schema({
   songId: { type: String, required: true },
   dateTime: { type: Date, required: true, default: Date.now },
   editDateTime: { type: Date, required: false },
+  replies: { type: Array, required: true, default: [] },
 });
 
 module.exports = mongoose.model("Comment", commentSchema);

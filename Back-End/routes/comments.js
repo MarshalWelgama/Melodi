@@ -65,6 +65,44 @@ router.patch("/vote", getComment, async (req, res) => {
   }
 });
 
+// Updating a comment - replying to it
+router.patch("/reply", getComment, async (req, res) => {
+  try {
+    let currentUserId = await getCurrentUserId();
+
+    let commentReply = {
+      userId: currentUserId,
+      text: req.body.text,
+      songId: res.comment[0].songId,
+      dateTime: new Date().toLocaleString(),
+      editDateTime: "",
+      votes: 0,
+    };
+    const comment = new Comment(commentReply);
+
+    try {
+      const newComment = await comment.save();
+      const updatedComment = await Comment.findOneAndUpdate(
+        {
+          songId: res.comment[0].songId,
+          dateTime: res.comment[0].dateTime,
+          userId: res.comment[0].userId,
+        },
+        {
+          replies: [...res.comment[0].replies, newComment],
+        },
+        { new: true }
+      );
+      // const updatedComment = await res.comment.save();
+      res.json(updatedComment);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 // Deleting a comment
 router.delete("/", getComment, async (req, res) => {
   try {
