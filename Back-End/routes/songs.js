@@ -67,8 +67,6 @@ async function getSong(req, res, next) {
       song.comments = songComments;
     }
 
-    console.log(song.comments);
-
     res.song = song;
   } catch (err) {
     return res.status(500).json({ message: err.message });

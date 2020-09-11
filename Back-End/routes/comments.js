@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Comment = require("../models/comment");
+const User = require("../models/user");
 
 // Getting a comment
-router.get("/:id", getComment, async (req, res) => {
+router.get("/", getComment, async (req, res) => {
   let userInfo = await userInfo.find({ userId: req.query.userId });
   console.log(userInfo);
   let formattedComment = {
@@ -37,27 +38,37 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Updating a comment - changing text or liking it
-router.patch("/:id", getComment, async (req, res) => {
-  if (req.query.text != null) {
-    res.comment.text = req.query.text;
-    res.comment.editDateTime = new Date().toLocaleString();
-  }
-
-  if (req.query.votes != null) {
-    res.comment.votes += 1;
-  }
-
+// Updating a comment - liking it
+router.patch("/vote", getComment, async (req, res) => {
   try {
-    const updatedComment = await res.comment.save();
-    res.json(updatedComment);
+    let currentUser = await spotifyApi.getMe();
+    let currentUserId = currentUser.body.id;
+
+    if (res.comment[0].votesUsers.includes(currentUserId)) {
+      res.json({ message: "User already upvoted comment" });
+    } else {
+      const updatedComment = await Comment.findOneAndUpdate(
+        {
+          songId: res.comment[0].songId,
+          dateTime: res.comment[0].dateTime,
+          userId: res.comment[0].userId,
+        },
+        {
+          votes: res.comment[0].votes + 1,
+          votesUsers: [...res.comment[0].votesUsers, currentUserId],
+        },
+        { new: true }
+      );
+      // const updatedComment = await res.comment.save();
+      res.json(updatedComment);
+    }
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
 // Deleting a comment
-router.delete("/:id", getComment, async (req, res) => {
+router.delete("/", getComment, async (req, res) => {
   try {
     await res.comment.remove();
     res.json({ message: "Deleted comment" });
