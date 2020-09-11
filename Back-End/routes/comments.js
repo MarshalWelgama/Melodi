@@ -5,10 +5,10 @@ const User = require("../models/user");
 
 // Getting a comment
 router.get("/", getComment, async (req, res) => {
-  let userInfo = await userInfo.find({ userId: req.query.userId });
+  let userInfo = await User.find({ userId: res.comment[0].userId });
   console.log(userInfo);
   let formattedComment = {
-    ...res.comment,
+    ...res.comment[0].toObject(),
     userName: userInfo.name,
     userImage: userInfo.image,
   };
@@ -41,8 +41,7 @@ router.post("/", async (req, res) => {
 // Updating a comment - liking it
 router.patch("/vote", getComment, async (req, res) => {
   try {
-    let currentUser = await spotifyApi.getMe();
-    let currentUserId = currentUser.body.id;
+    let currentUserId = await getCurrentUserId();
 
     if (res.comment[0].votesUsers.includes(currentUserId)) {
       res.json({ message: "User already upvoted comment" });
@@ -81,9 +80,7 @@ async function getComment(req, res, next) {
   let comment;
   try {
     comment = await Comment.find({
-      songId: req.query.songId,
-      dateTime: req.query.dateTime,
-      userId: req.query.userId,
+      _id: req.query.id,
     });
     if (comment == null) {
       return res.status(404).json({ message: "Cannot find comment" });
