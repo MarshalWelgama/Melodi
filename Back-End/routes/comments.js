@@ -17,11 +17,11 @@ router.get("/:id", getComment, async (req, res) => {
 // Creating a comment
 router.post("/", async (req, res) => {
   let currentUserId = await getCurrentUserId();
-  console.log(req.query);
+  console.log("req.body", req.body);
   let commentData = {
     userId: currentUserId,
-    text: req.query.text,
-    songId: req.query.songId,
+    text: req.body.text,
+    songId: req.body.songId,
     dateTime: new Date().toLocaleString(),
     editDateTime: "",
     votes: 0,
