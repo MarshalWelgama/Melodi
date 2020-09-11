@@ -83,20 +83,20 @@ router.get("/:id", getUser, (req, res) => {
 
 // Updating a user
 router.patch("/:id", getUser, async (req, res) => {
-  if (req.query.name != null) {
-    res.user.name = req.query.name;
+  if (req.body.name != null) {
+    res.user.name = req.body.name;
   }
-  if (req.query.email != null) {
-    res.user.email = req.query.email;
+  if (req.body.email != null) {
+    res.user.email = req.body.email;
   }
-  if (req.query.countryCode != null) {
-    res.user.countryCode = req.query.countryCode;
+  if (req.body.countryCode != null) {
+    res.user.countryCode = req.body.countryCode;
   }
-  if (req.query.image != null) {
-    res.user.image = req.query.image;
+  if (req.body.image != null) {
+    res.user.image = req.body.image;
   }
-  if (req.query.link != null) {
-    res.user.link = req.query.link;
+  if (req.body.link != null) {
+    res.user.link = req.body.link;
   }
 
   try {
@@ -110,7 +110,7 @@ router.patch("/:id", getUser, async (req, res) => {
 // Deleting a user
 router.delete("/:id", async (req, res) => {
   try {
-    await User.deleteOne({ userId: req.params.id });
+    await User.deleteOne({ userId: req.body.id });
     res.json({ message: "Deleted user" });
   } catch (err) {
     res.status(500).json({ message: err.message });

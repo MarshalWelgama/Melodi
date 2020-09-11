@@ -18,7 +18,6 @@ router.get("/", getComment, async (req, res) => {
 // Creating a comment
 router.post("/", async (req, res) => {
   let currentUserId = await getCurrentUserId();
-  console.log("req.body", req.body);
   let commentData = {
     userId: currentUserId,
     text: req.body.text,
@@ -80,7 +79,7 @@ async function getComment(req, res, next) {
   let comment;
   try {
     comment = await Comment.find({
-      _id: req.query.id,
+      _id: req.body.id,
     });
     if (comment == null) {
       return res.status(404).json({ message: "Cannot find comment" });
