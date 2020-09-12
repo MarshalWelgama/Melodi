@@ -106,7 +106,11 @@ router.patch("/reply", getComment, async (req, res) => {
 // Deleting a comment
 router.delete("/", getComment, async (req, res) => {
   try {
-    await res.comment.remove();
+    await Comment.findOneAndDelete({
+      songId: res.comment[0].songId,
+      dateTime: res.comment[0].dateTime,
+      userId: res.comment[0].userId,
+    });
     res.json({ message: "Deleted comment" });
   } catch (err) {
     res.status(500).json({ message: err.message });
