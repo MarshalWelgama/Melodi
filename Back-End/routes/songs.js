@@ -34,7 +34,7 @@ router.get("/current", async function (req, res) {
     });
 });
 
-router.get("/", getSong, (req, res) => {
+router.get("/:id", getSong, (req, res) => {
   res.json(res.song);
 });
 
@@ -42,7 +42,7 @@ async function getSong(req, res, next) {
   console.log("HERE");
   let song;
   try {
-    let songData = await spotifyApi.getTrack(req.body.id);
+    let songData = await spotifyApi.getTrack(req.params.id);
     song = {
       songId: songData.body.id,
       songName: songData.body.name,
@@ -53,7 +53,7 @@ async function getSong(req, res, next) {
       comments: [],
     };
 
-    let songComments = await getSongComments(req.body.id);
+    let songComments = await getSongComments(req.params.id);
     if (songComments.message) {
       song.comments = [];
     } else {
