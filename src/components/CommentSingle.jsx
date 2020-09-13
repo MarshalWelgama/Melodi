@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import 'fontsource-roboto';
-import { Button, Card, Comment, Form, Header, CommentGroup, Popup, Icon } from 'semantic-ui-react'
+import { Button, Card, Comment, Modal, Header, CommentGroup, Popup, Icon } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import ta from 'time-ago'
 import axios from 'axios';
-
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 Date.prototype.customFormat = function(formatString){
     var YYYY,YY,MMMM,MMM,MM,M,DDDD,DDD,DD,D,hhhh,hhh,hh,h,mm,m,ss,s,ampm,AMPM,dMod,th;
@@ -29,6 +30,23 @@ Date.prototype.customFormat = function(formatString){
 
 class CommentSingle extends Component {
     state = { }
+    AreYouSure = () => {
+        confirmAlert({
+          title: 'Are you sure to do this?',
+          message: `Comments that are deleted can't be undone.`,
+          buttons: [
+            {
+              label: 'Yes',
+              onClick: this.handleDeleteClick
+            },
+            {
+              label: 'No',
+              onClick:(onclose)
+             
+            }
+          ]
+        });
+      };
     handleDeleteClick = () => {
         const {renderComments, songId, comment} = this.props
         const commentId = comment._id
@@ -44,11 +62,10 @@ class CommentSingle extends Component {
     }
     deleteHandler = () => { //only see if comment is something user posted
         const {comment, userId} = this.props
-         
         if (comment.userId == userId) {
             return (
                 <React.Fragment>
-                                    <button onClick={this.handleDeleteClick}
+                                    <button onClick={this.AreYouSure}
                                             class="ui black basic button">Delete</button>
                                     <button class="ui orange basic button">Report</button>
                 </React.Fragment>
