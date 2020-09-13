@@ -26,17 +26,30 @@ Date.prototype.customFormat = function(formatString){
     return formatString.replace("#hhhh#",hhhh).replace("#hhh#",hhh).replace("#hh#",hh).replace("#h#",h).replace("#mm#",mm).replace("#m#",m).replace("#ss#",ss).replace("#s#",s).replace("#ampm#",ampm).replace("#AMPM#",AMPM);
   };
 
-  
 
 class CommentSingle extends Component {
     state = { }
-    deleteHandler() { //only see if comment is something user posted
+    handleDeleteClick = () => {
+        const {renderComments, songId, comment} = this.props
+        const commentId = comment._id
+        axios.delete('http://localhost:8888/api/comments/', {
+             data: { id: commentId } })
+          .then(function (response) {
+            console.log(response);
+            renderComments(songId);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
+    deleteHandler = () => { //only see if comment is something user posted
         const {comment, userId} = this.props
          
         if (comment.userId == userId) {
             return (
                 <React.Fragment>
-                                    <button class="ui black basic button">Delete</button>
+                                    <button onClick={this.handleDeleteClick}
+                                            class="ui black basic button">Delete</button>
                                     <button class="ui orange basic button">Report</button>
                 </React.Fragment>
             )
@@ -117,7 +130,7 @@ class CommentSingle extends Component {
                 <Button  basic icon size='mini'><Icon name='utensil spoon icon' /></Button>
                 <Button basic icon size='mini'><Icon name='reply' /></Button>
                 <Popup 
-                                    trigger={<Button basic icon size='mini'><Icon name='ellipsis horizontal' /></Button>}
+                                    trigger={<Button floated='right' basic icon size='mini' style={{"box-shadow":"0 0 0 1px white inset"}}><Icon name='ellipsis horizontal' /></Button>}
                                     content={this.deleteHandler()}
                                     on='click'
                                     hideOnScroll

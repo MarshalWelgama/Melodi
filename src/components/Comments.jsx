@@ -16,7 +16,7 @@ class Comments extends Component {
           return ( 
             <React.Fragment>
               {prettyComments.map(comment => (
-                <CommentSingle comment={comment} replies={replies} userId={userId}></CommentSingle>
+                <CommentSingle comment={comment} replies={replies} userId={userId} renderComments={this.props.renderComments} songId={this.props.songId}></CommentSingle>
               ))}
             </React.Fragment>
           );
