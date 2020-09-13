@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import 'fontsource-roboto';
-import Paper from '@material-ui/core/Paper';
 import { Button, Card, Comment, Form, Header, CommentGroup, Popup, Icon } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import ta from 'time-ago'
@@ -30,6 +29,25 @@ Date.prototype.customFormat = function(formatString){
 
 class CommentSingle extends Component {
     state = { }
+    deleteHandler() { //only see if comment is something user posted
+        const {comment, userId} = this.props
+        if (comment.userId == userId) {
+            return (
+                <React.Fragment>
+                                    <button class="ui black basic button">Delete</button>
+                                    <button class="ui orange basic button">Report</button>
+                </React.Fragment>
+            )
+        }
+        else {
+            return(
+                <React.Fragment>
+                                    <button class="ui orange basic button">Report</button>
+                </React.Fragment>
+            )
+        }
+        
+    }
     renderReplies() {
         const {comment, replies} = this.props
         if(replies) { // check reply array length, if > 1 then return comments.
@@ -80,6 +98,7 @@ class CommentSingle extends Component {
         return ( 
             
             <React.Fragment >
+                
             <Card style={{'padding':'15px', 'margin':'10px'}} fluid color="grey">
             <Comment>
               <Comment.Avatar as='a' src={comment.userImage} />
@@ -88,18 +107,16 @@ class CommentSingle extends Component {
                 <Comment.Metadata>
                 <Popup content={timeStamp} trigger={<span>{relativeTime}</span>} />
                 <div>
-            <Icon name='hand peace outline' />5 
+                <Icon name='utensil spoon icon' /> 4
           </div>
                 </Comment.Metadata>
                 <Comment.Text>{comment.text}</Comment.Text>
                 <Comment.Actions >
-                <Button  basic icon size='mini'><Icon name='hand peace outline' /></Button>
+                <Button  basic icon size='mini'><Icon name='utensil spoon icon' /></Button>
                 <Button basic icon size='mini'><Icon name='reply' /></Button>
                 <Popup 
                                     trigger={<Button basic icon size='mini'><Icon name='ellipsis horizontal' /></Button>}
-                                    content={<React.Fragment>
-                                        <a>tits</a>
-                                    </React.Fragment>}
+                                    content={this.deleteHandler()}
                                     on='click'
                                     hideOnScroll
                                 />
