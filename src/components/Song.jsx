@@ -5,27 +5,16 @@ import { withRouter } from "react-router";
 import Comments from "./Comments";
 import SongHeader from "./SongHeader";
 import { Form, Button, TextArea, Sticky, Ref } from "semantic-ui-react";
+import TextInput from "./TextInput";
 
-const footerStyle = {
-  
-  backgroundColor: "white",
-  borderTop: "1px solid #E7E7E7",
-  textAlign: "center",
-  padding: "15px",
-  position: "fixed",
-  left: "0",
-  bottom: "0",
-  width: "100%", 
-  display: "grid",
-  placeItems: "center"
-};
+
 
 
 class Song extends Component {
   state = { 
     active:false,
     user: { name:"", image:"", userId:"", link:""}, 
-    song: { name: "Not Checked", artist: [], albumArt: "", comments: []}
+    song: { songId:"", name: "Not Checked", artist: [], albumArt: "", comments: []}
   };
   contextRef = createRef()
 
@@ -65,13 +54,15 @@ class Song extends Component {
     let songData = await axios.get(
       "http://localhost:8888/api/songs/".concat(songId)
     );
+    console.log('updated')
     console.log(songData)
     if (songData.data) { 
       let song = {
         name: songData.data.songName,
         artist: songData.data.artistsName,
         albumArt: songData.data.albumArt,
-        comments: songData.data.comments
+        comments: songData.data.comments,
+        songId: songData.data.songId
       };
       this.setState({ song });
     } else {
@@ -80,37 +71,24 @@ class Song extends Component {
     return songData;
   };
 
-  renderComments() {
-    console.log(this.state.loggedIn)
-    const comments = this.state.song.comments
-    var prettyComments = []
-    for (var i = 0; i < comments.length; i++) {
-      prettyComments.push(comments[i].text)
-      }
 
-      console.log(prettyComments)
-      return ( 
-        <React.Fragment>
-          {prettyComments.map(comment => (
-            <a key={comment}>{comment}</a>
-          ))}
-        </React.Fragment>
-      );
-    }
     
     handleClick = () => {
     this.setState((prevState) => ({ active: !prevState.active }))
       console.log(this.state)
     }
 
-    
+    testingFunction = () => {
+      console.log('testerrr')
+    }
     
   render() {
     const commentsArray = this.state.song.comments
     console.log(commentsArray);
     let commentsActive = (Array.isArray(commentsArray) && commentsArray.length);
     console.log(commentsActive)
-    const active = this.state.active
+    const {active} = this.state
+    const {songId}=this.state.song
     return (
       // <div className="main-page container-fluid justify-content-center">
       //   <div
@@ -141,18 +119,7 @@ class Song extends Component {
         Toggle Replies
       </Button>
       <Comments comments={this.state.song.comments} replies={this.state.active}/>
- 
-    <div>
-        <div style={footerStyle}>
-        <Form style={{'width':'40%', 'padding-top':'10px'}} reply>
-      <TextArea />
-      <Button style={{'margin-top': '10px'}}content='Comment' labelPosition='right' icon='arrow right' />
-      
-    </Form>
-
-        </div>
-      </div>
-
+      <TextInput songId={songId} renderComments={this.getSongDetails}/>
       <div style={{'paddingBottom':'175px'}}/>
 
     

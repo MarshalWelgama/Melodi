@@ -18,7 +18,8 @@
     "react-scripts": "3.4.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^1.2.1",
-    "spotify-web-api-js": "^1.5.0"
+    "spotify-web-api-js": "^1.5.0",
+    "time-ago": "^0.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

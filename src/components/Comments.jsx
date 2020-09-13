@@ -22,12 +22,12 @@ class Comments extends Component {
     render() { 
 
         return ( 
-            <div style={{'display':'grid', 'justifyContent':'center'}}>
+            <div style={{'display':'grid', 'justifyContent':'center','text-align': 'center'}}>
                 <Comment.Group threaded>
-            <Header as='h3' dividing>
+            <Header  as='h3' dividing >
               All Comments
             </Header>
-            <div>
+            <div style={{'text-align': 'start'}}>
                 {this.renderComments()}
             </div>
             </Comment.Group>
