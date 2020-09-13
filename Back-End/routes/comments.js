@@ -5,14 +5,18 @@ const User = require("../models/user");
 
 // Getting a comment
 router.get("/", getComment, async (req, res) => {
-  let userInfo = await User.find({ userId: res.comment[0].userId });
-  console.log(userInfo);
-  let formattedComment = {
-    ...res.comment[0].toObject(),
-    userName: userInfo.name,
-    userImage: userInfo.image,
-  };
-  res.json(formattedComment);
+  try {
+    let userInfo = await User.find({ userId: res.comment[0].userId });
+    console.log(userInfo);
+    let formattedComment = {
+      ...res.comment[0].toObject(),
+      userName: userInfo.name,
+      userImage: userInfo.image,
+    };
+    res.json(formattedComment);
+  } catch (err) {
+    res.json({ message: "Couldn't find comment" });
+  }
 });
 
 // Creating a comment
