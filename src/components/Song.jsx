@@ -118,7 +118,7 @@ class Song extends Component {
       <Button toggle active={active} onClick={this.handleClick}>
         Toggle Replies
       </Button>
-      <Comments comments={this.state.song.comments} replies={this.state.active}/>
+      <Comments comments={this.state.song.comments} replies={this.state.active} userId={this.state.user.userId}/>
       <TextInput songId={songId} renderComments={this.getSongDetails}/>
       <div style={{'paddingBottom':'175px'}}/>
 
