@@ -3,6 +3,7 @@ import 'fontsource-roboto';
 import { Button, Card, Comment, Form, Header, CommentGroup, Popup, Icon } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import ta from 'time-ago'
+import axios from 'axios';
 
 
 Date.prototype.customFormat = function(formatString){
@@ -31,6 +32,7 @@ class CommentSingle extends Component {
     state = { }
     deleteHandler() { //only see if comment is something user posted
         const {comment, userId} = this.props
+         
         if (comment.userId == userId) {
             return (
                 <React.Fragment>

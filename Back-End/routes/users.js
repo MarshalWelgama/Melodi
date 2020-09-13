@@ -32,13 +32,14 @@ router.get("/current", function (req, res) {
             console.log(docs[0]);
             res.json(docs[0]);
           } else {
+            console.log(response.body.images)
             userData = {
               userId: response.body.id,
               name: response.body.display_name,
               email: response.body.email,
               countryCode: response.body.country,
               image:
-                response.body.images === [] ? "" : response.body.images[0].url,
+                response.body.images.length == 0 ? "" : response.body.images[0].url,
               link: response.body.external_urls.spotify,
             };
             User.create(userData, function (err, docs) {
@@ -58,7 +59,7 @@ router.get("/current", function (req, res) {
 });
 
 // Getting one user
-router.get("/:id", getUser, (req, res) => {
+router.get("/", getUser, (req, res) => {
   res.json(res.user);
 });
 
@@ -82,7 +83,7 @@ router.get("/:id", getUser, (req, res) => {
 // });
 
 // Updating a user
-router.patch("/:id", getUser, async (req, res) => {
+router.patch("/", getUser, async (req, res) => {
   if (req.body.name != null) {
     res.user.name = req.body.name;
   }
@@ -108,7 +109,7 @@ router.patch("/:id", getUser, async (req, res) => {
 });
 
 // Deleting a user
-router.delete("/:id", async (req, res) => {
+router.delete("/", async (req, res) => {
   try {
     await User.deleteOne({ userId: req.body.id });
     res.json({ message: "Deleted user" });
@@ -120,7 +121,7 @@ router.delete("/:id", async (req, res) => {
 async function getUser(req, res, next) {
   let user;
   try {
-    user = await User.find({ userId: req.params.id });
+    user = await User.find({ userId: req.body.id });
     if (user == null) {
       return res.status(404).json({ message: "Cannot find user" });
     }
