@@ -26,17 +26,18 @@ router.post("/", async (req, res) => {
     userId: currentUserId,
     text: req.body.text,
     songId: req.body.songId,
-    dateTime: new Date().toLocaleString(),
     editDateTime: "",
     votes: 0,
   };
   console.log(commentData);
   const comment = new Comment(commentData);
-
+  console.log("MADE IT HERE");
   try {
     const newComment = await comment.save();
+    console.log("AFTER SAVING");
     res.status(201).json(newComment);
   } catch (error) {
+    console.log("CATCHED ERROR");
     res.status(400).json({ message: error.message });
   }
 });
