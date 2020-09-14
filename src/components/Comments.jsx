@@ -24,8 +24,8 @@ class Comments extends Component {
     render() { 
 
         return ( 
-            <div style={{'display':'grid', 'justifyContent':'center','text-align': 'center'}}>
-                <Comment.Group threaded>
+            <div style={{'display':'flex', 'justifyContent':'center','text-align': 'center'}}>
+                <Comment.Group style={{'width':'100%'}}threaded>
             <Header  as='h3' dividing >
               All Comments
             </Header>

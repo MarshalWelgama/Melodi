@@ -30,6 +30,7 @@ Date.prototype.customFormat = function(formatString){
 
 class CommentSingle extends Component {
     state = { }
+
     AreYouSure = () => {
         confirmAlert({
           title: 'Are you sure to do this?',
@@ -131,7 +132,7 @@ class CommentSingle extends Component {
             
             <React.Fragment >
                 
-            <Card style={{'padding':'15px', 'margin':'10px'}} fluid color="grey">
+            <Card style={{'padding':'15px', 'margin':'5px 5px 10px', 'width':'97%'}}  color="grey">
             <Comment>
               <Comment.Avatar as='a' src={comment.userImage} />
               <Comment.Content>
@@ -139,19 +140,19 @@ class CommentSingle extends Component {
                 <Comment.Metadata>
                 <Popup content={timeStamp} trigger={<span>{relativeTime}</span>} />
                 <div>
-                <Icon name='utensil spoon icon' /> 4
+                <Icon name='utensil spoon icon' /> {comment.votes}
           </div>
                 </Comment.Metadata>
-                <Comment.Text>{comment.text}</Comment.Text>
+                <Comment.Text style={{"margin": "4px 0px 8px 0px"}}>{comment.text}</Comment.Text>
                 <Comment.Actions >
                 <Button  basic icon size='mini'><Icon name='utensil spoon icon' /></Button>
                 <Button basic icon size='mini'><Icon name='reply' /></Button>
                 <Popup 
-                                    trigger={<Button floated='right' basic icon size='mini' style={{"box-shadow":"0 0 0 1px white inset"}}><Icon name='ellipsis horizontal' /></Button>}
-                                    content={this.deleteHandler()}
-                                    on='click'
-                                    hideOnScroll
-                                />
+                    trigger={<Button floated='right' basic icon size='mini' style={{"box-shadow":"0 0 0 1px white inset"}}><Icon name='ellipsis horizontal' /></Button>}
+                    content={this.deleteHandler()}
+                    on='click'
+                    hideOnScroll
+                />
                                   
                 </Comment.Actions>
                 
