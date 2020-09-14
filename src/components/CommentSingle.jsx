@@ -32,6 +32,10 @@ class CommentSingle extends Component {
     state = { }
 
     AreYouSure = () => {
+        var element = document.getElementById('popupDelete');
+
+        element.style.transform = null;
+
         confirmAlert({
           title: 'Are you sure to do this?',
           message: `Comments that are deleted can't be undone.`,
@@ -63,6 +67,7 @@ class CommentSingle extends Component {
     }
     deleteHandler = () => { //only see if comment is something user posted
         const {comment, userId} = this.props
+       
         if (comment.userId == userId) {
             return (
                 <React.Fragment>
@@ -147,7 +152,7 @@ class CommentSingle extends Component {
                 <Comment.Actions >
                 <Button  basic icon size='mini'><Icon name='utensil spoon icon' /></Button>
                 <Button basic icon size='mini'><Icon name='reply' /></Button>
-                <Popup 
+                <Popup id="popupDelete"
                     trigger={<Button floated='right' basic icon size='mini' style={{"box-shadow":"0 0 0 1px white inset"}}><Icon name='ellipsis horizontal' /></Button>}
                     content={this.deleteHandler()}
                     on='click'
