@@ -88,43 +88,49 @@ class CommentSingle extends Component {
     }
     renderReplies() {
         const {comment, replies} = this.props
-        if(replies) { // check reply array length, if > 1 then return comments.
-            return (
-                // enclose comments within the CommentGroup (use map functoin)
-                <CommentGroup> 
+        var arr = []
+         if(comment.replies.length != 0) { // check reply array length, if > 1 then return comments.
+
+             const commentsReply = comment.replies
+       
+         
+        
+         for (var i = 0; i < commentsReply.length; i++) {
+        
+           arr.push(commentsReply[i])
+           const date = new Date(arr[i].dateTime)
+           const timeStamp = date.customFormat( "#DD# #MMMM# #YYYY# #hh#:#mm# #AMPM#" );
+           const relativeTime = ta.ago(date);
+           arr[i].dateTime = relativeTime
+           arr[i].timeStamp = timeStamp
+         }
+        console.log('here')
+         console.log(arr)
+           return (
+              <CommentGroup>
+                   { arr.map(({dateTime, text, timeStamp }) => ( 
+                     <React.Fragment>
                     <Comment>
                   <Comment.Avatar as='a' src='https://react.semantic-ui.com/images/avatar/small/jenny.jpg' />
-                  <Comment.Content>
-                    <Comment.Author as='a'>Jenny Hess</Comment.Author>
-                    <Comment.Metadata>
-                      <span>Just now</span>
-                    </Comment.Metadata>
-                    <Comment.Text>Testing a reply on a comment 1</Comment.Text>
-                    <Comment.Actions>
-                      <a>Reply</a>
-                    </Comment.Actions>
-                  </Comment.Content>
-                </Comment>
-              
-                <Comment>
-                  <Comment.Avatar as='a' src='https://react.semantic-ui.com/images/avatar/small/jenny.jpg' />
-                  <Comment.Content>
-                    <Comment.Author as='a'>Jenny Hess</Comment.Author>
-                    <Comment.Metadata>
-                      <span>Just now</span>
-                    </Comment.Metadata>
-                    <Comment.Text>Testing reply on a comment 2</Comment.Text>
-                    <Comment.Actions>
-                      <a>Reply</a>
-                    </Comment.Actions>
-                  </Comment.Content>
-                </Comment>
-                </CommentGroup>
-            )
+                   <Comment.Content>
+                     <Comment.Author as='a'>Some random cunt </Comment.Author>
+                     <Comment.Metadata>
+                     <span>{dateTime}</span>
+                     </Comment.Metadata>
+                     <Comment.Text>{text}</Comment.Text>
+                     <Comment.Actions>
+                       <a>Reply</a>
+                     </Comment.Actions>
+                   </Comment.Content>
+                 </Comment>
+                 
+                  </React.Fragment>  
+
+                  ))}
+              </CommentGroup>
+          )
         }
-        else {
-            return null
-        }
+       
         
     }
     render() { 
