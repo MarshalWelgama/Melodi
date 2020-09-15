@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import 'fontsource-roboto';
 import { Button, Card, Comment, Modal, Header, CommentGroup, Popup, Icon } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
@@ -6,6 +6,8 @@ import ta from 'time-ago'
 import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
+
+
 
 Date.prototype.customFormat = function(formatString){
     var YYYY,YY,MMMM,MMM,MM,M,DDDD,DDD,DD,D,hhhh,hhh,hh,h,mm,m,ss,s,ampm,AMPM,dMod,th;
@@ -27,10 +29,12 @@ Date.prototype.customFormat = function(formatString){
     return formatString.replace("#hhhh#",hhhh).replace("#hhh#",hhh).replace("#hh#",hh).replace("#h#",h).replace("#mm#",mm).replace("#m#",m).replace("#ss#",ss).replace("#s#",s).replace("#ampm#",ampm).replace("#AMPM#",AMPM);
   };
 
-
+var numberr = 5
 class CommentSingle extends Component {
-    state = { }
-
+    state = {votes:this.props.votes}
+    
+    
+    
     AreYouSure = () => {
         var element = document.getElementById('popupDelete');
 
@@ -86,16 +90,39 @@ class CommentSingle extends Component {
         }
         
     }
+    updateVotes() {
+        this.setState({votes: this.state.votes + 1}, () => {
+            console.log(this.state.votes)
+            this.voteHandler = this.voteHandler.bind(this)
+        })
+    }
+    voteHandler = () => {
+     
+        
+        const{votes} = this.state
+        const {comment, renderComments, songId} = this.props
+        const commentId = comment._id
+        console.log(commentId)
+        axios.patch('http://localhost:8888/api/comments/vote', {
+            
+            id: commentId 
+          })
+          .then(function (response) {
+            renderComments(songId)
+            console.log(response);
+
+            
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
     renderReplies() {
         const {comment, replies} = this.props
         var arr = []
          if(comment.replies.length != 0) { // check reply array length, if > 1 then return comments.
-
-             const commentsReply = comment.replies
-       
-         
-        
-         for (var i = 0; i < commentsReply.length; i++) {
+        const commentsReply = comment.replies
+        for (var i = 0; i < commentsReply.length; i++) {
         
            arr.push(commentsReply[i])
            const date = new Date(arr[i].dateTime)
@@ -104,8 +131,6 @@ class CommentSingle extends Component {
            arr[i].dateTime = relativeTime
            arr[i].timeStamp = timeStamp
          }
-        console.log('here')
-         console.log(arr)
            return (
               <CommentGroup>
                    { arr.map(({dateTime, text, timeStamp }) => ( 
@@ -115,7 +140,7 @@ class CommentSingle extends Component {
                    <Comment.Content>
                      <Comment.Author as='a'>Some random cunt </Comment.Author>
                      <Comment.Metadata>
-                     <span>{dateTime}</span>
+                     <Popup content={timeStamp} trigger={<span>{dateTime}</span>} />
                      </Comment.Metadata>
                      <Comment.Text>{text}</Comment.Text>
                      <Comment.Actions>
@@ -151,12 +176,12 @@ class CommentSingle extends Component {
                 <Comment.Metadata>
                 <Popup content={timeStamp} trigger={<span>{relativeTime}</span>} />
                 <div>
-                <Icon name='utensil spoon icon' /> {comment.votes}
+                <Icon name='utensil spoon icon' />{this.props.comment.votes}
           </div>
                 </Comment.Metadata>
                 <Comment.Text style={{"margin": "4px 0px 8px 0px"}}>{comment.text}</Comment.Text>
                 <Comment.Actions >
-                <Button  basic icon size='mini'><Icon name='utensil spoon icon' /></Button>
+                <Button  basic icon onClick={this.voteHandler} size='mini'><Icon name='utensil spoon icon'/></Button>
                 <Button basic icon size='mini'><Icon name='reply' /></Button>
                 <Popup id="popupDelete"
                     trigger={<Button floated='right' basic icon size='mini' style={{"box-shadow":"0 0 0 1px white inset"}}><Icon name='ellipsis horizontal' /></Button>}
