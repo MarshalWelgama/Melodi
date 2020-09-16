@@ -8,11 +8,28 @@ router.get("/", getComment, async (req, res) => {
   try {
     let userInfo = await User.find({ userId: res.comment[0].userId });
     console.log(userInfo);
-    let formattedComment = {
-      ...res.comment[0].toObject(),
-      userName: userInfo.name,
-      userImage: userInfo.image,
+    let formattedComment;
+    let formattedReplies = [];
+    for (var i = 0; i < formattedComment.replies.length; i++) {
+      let replyUserInfo = await User.find({
+        userId: formattedComment.replies[i].userId,
+      });
+      formattedReplies[i] = {
+        ...formattedComment.replies[i],
+        userName: replyUserInfo[0].name,
+        userImage: replyUserInfo[0].image,
+        userLink: replyUserInfo[0].link,
+      };
+    }
+
+    formattedComment = {
+      ...formattedComment,
+      userName: userInfo[0].name,
+      userImage: userInfo[0].image,
+      userLink: userInfo[0].link,
+      replies: formattedReplies,
     };
+
     res.json(formattedComment);
   } catch (err) {
     res.json({ message: "Couldn't find comment" });

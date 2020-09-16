@@ -80,14 +80,37 @@ async function getSongComments(id) {
 
     for (var i = 0; i < comments.length; i++) {
       userInfo = await User.find({ userId: comments[i].userId });
+
+      let formattedReplies = [];
+      console.log(comments[i].replies.length);
+      for (var j = 0; j < comments[i].replies.length; j++) {
+        try {
+          let replyUserInfo = await User.find({
+            userId: comments[i].replies[j].userId,
+          });
+          console.log("replyUserInfo", replyUserInfo);
+          console.log("comments[i].replies[j]", comments[i].replies[j]);
+          formattedReplies[j] = {
+            ...comments[i].replies[j],
+            userName: replyUserInfo[0].name,
+            userImage: replyUserInfo[0].image,
+            userLink: replyUserInfo[0].link,
+          };
+        } catch (err) {
+          continue;
+        }
+      }
+
+      console.log("formattedReplies", formattedReplies);
+
       comments[i] = {
         ...comments[i].toObject(),
         userName: userInfo[0].name,
         userImage: userInfo[0].image,
         userLink: userInfo[0].link,
+        replies: formattedReplies,
       };
     }
-
     return comments;
   } catch (err) {
     return { message: err.message };
