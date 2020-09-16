@@ -79,9 +79,9 @@ router.patch("/reply", getComment, async (req, res) => {
       userId: currentUserId,
       text: req.body.text,
       songId: res.comment[0].songId,
-      dateTime: new Date().toLocaleString(),
       editDateTime: "",
       votes: 0,
+      level: 1,
     };
     const comment = new Comment(commentReply);
 

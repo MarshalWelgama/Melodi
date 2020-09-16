@@ -9,6 +9,7 @@ const commentSchema = new mongoose.Schema({
   dateTime: { type: Date, required: true, default: Date.now },
   editDateTime: { type: Date, required: false },
   replies: { type: Array, required: true, default: [] },
+  level: { type: Number, required: true, default: 0 },
 });
 
 module.exports = mongoose.model("Comment", commentSchema);
