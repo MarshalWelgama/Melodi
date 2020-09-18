@@ -34,6 +34,35 @@ router.get("/current", async function (req, res) {
     });
 });
 
+// Search for a song
+router.get("/search", async function (req, res) {
+  let searchQuery = req.body.searchQuery;
+  let tracks = [];
+  spotifyApi.searchTracks(searchQuery).then((response) => {
+    let searchResults = response.body.tracks.items;
+    if (searchResults.length > 0) {
+      for (var i = 0; i < searchResults.length; i++) {
+        try {
+          let track = {
+            songId: searchResults[i].id,
+            songName: searchResults[i].name,
+            artistsName: searchResults[i].artists.map((artist) => artist.name),
+            albumName: searchResults[i].album.name,
+            albumArt: searchResults[i].album.images[0].url,
+            previewURL: searchResults[i].preview_url,
+          };
+          tracks.push(track);
+        } catch (err) {
+          continue;
+        }
+      }
+      res.json(tracks);
+    } else {
+      res.status(404).json({ message: "No search results found" });
+    }
+  });
+});
+
 router.get("/:id", getSong, (req, res) => {
   res.json(res.song);
 });
