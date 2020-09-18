@@ -29,17 +29,22 @@ Date.prototype.customFormat = function(formatString){
     return formatString.replace("#hhhh#",hhhh).replace("#hhh#",hhh).replace("#hh#",hh).replace("#h#",h).replace("#mm#",mm).replace("#m#",m).replace("#ss#",ss).replace("#s#",s).replace("#ampm#",ampm).replace("#AMPM#",AMPM);
   };
 
-var numberr = 5
+  
 class CommentSingle extends Component {
-    state = {votes:this.props.votes}
-    
-    
-    
+  
+
+    constructor(props) {
+      super(props)
+      console.log('this')
+      
+      this.state = {votes: this.props.comment.votes}
+      console.log(this.state.votes)
+    }
     AreYouSure = () => {
         var element = document.getElementById('popupDelete');
 
-        element.style.transform = null;
-
+        element.style.transform = 'scale(0)';
+        console.log(this.state)
         confirmAlert({
           title: 'Are you sure to do this?',
           message: `Comments that are deleted can't be undone.`,
@@ -93,13 +98,11 @@ class CommentSingle extends Component {
     updateVotes() {
         this.setState({votes: this.state.votes + 1}, () => {
             console.log(this.state.votes)
-            this.voteHandler = this.voteHandler.bind(this)
+            
         })
     }
     voteHandler = () => {
      
-        
-        const{votes} = this.state
         const {comment, renderComments, songId} = this.props
         const commentId = comment._id
         console.log(commentId)
@@ -107,8 +110,12 @@ class CommentSingle extends Component {
             
             id: commentId 
           })
-          .then(function (response) {
-            renderComments(songId)
+          .then((response) => {
+            if(response.data.votes){
+              this.setState({
+                votes: +response.data.votes
+            })//thi.setState not working here. 
+            }
             console.log(response);
 
             
@@ -176,7 +183,7 @@ class CommentSingle extends Component {
                 <Comment.Metadata>
                 <Popup content={timeStamp} trigger={<span>{relativeTime}</span>} />
                 <div>
-                <Icon name='utensil spoon icon' />{this.props.comment.votes}
+                <Icon name='utensil spoon icon' />{this.state.votes}
           </div>
                 </Comment.Metadata>
                 <Comment.Text style={{"margin": "4px 0px 8px 0px"}}>{comment.text}</Comment.Text>

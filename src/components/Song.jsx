@@ -12,7 +12,7 @@ import TextInput from "./TextInput";
 
 class Song extends Component {
   state = { 
-    active:false,
+ 
     user: { name:"", image:"", userId:"", link:""}, 
     song: { songId:"", name: "Not Checked", artist: [], albumArt: "", comments: []}
   };
@@ -73,14 +73,12 @@ class Song extends Component {
 
 
     
-    handleClick = () => {
-    this.setState((prevState) => ({ active: !prevState.active }))
-      console.log(this.state)
-    }
+    // handleClick = () => {
+    // this.setState((prevState) => ({ active: !prevState.active }))
+    //   console.log(this.state)
+    // }
 
-    testingFunction = () => {
-      console.log('testerrr')
-    }
+    
     
   render() {
     const commentsArray = this.state.song.comments
@@ -115,10 +113,7 @@ class Song extends Component {
       
       <div className="main-page">
       <SongHeader albumArt={this.state.song.albumArt} artist={this.state.song.artist} songName={this.state.song.name} user={this.state.user}/>
-      <Button toggle active={active} onClick={this.handleClick}>
-        Toggle Replies
-      </Button>
-      <Comments comments={this.state.song.comments} replies={this.state.active} userId={this.state.user.userId} renderComments={this.getSongDetails} songId={songId}/>
+      <Comments comments={this.state.song.comments} userId={this.state.user.userId} renderComments={this.getSongDetails} songId={songId}/>
       <TextInput songId={songId} renderComments={this.getSongDetails}/>
       <div style={{'paddingBottom':'175px'}}/>
 
