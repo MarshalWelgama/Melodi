@@ -42,15 +42,26 @@ router.get("/recent", async (req, res) => {
   if (!numResults) {
     numResults = 5;
   }
-  Comment.find()
-    .sort({ _id: -1 })
-    .limit(numResults)
-    .exec((err, comments) => {
-      if (err) {
-        res.json(err);
-      }
-      res.json(comments);
-    });
+  let comments = await Comment.find().sort({ _id: -1 }).limit(numResults);
+  let formattedComments = [];
+  for (var i = 0; i < comments.length; i++) {
+    let userInfo = await User.find({ userId: comments[i].userId });
+    let songInfo = await spotifyApi.getTrack(comments[i].songId);
+
+    let formattedComment = {
+      ...comments[i].toObject(),
+      userName: userInfo.name,
+      userImage: userInfo.image,
+      userLink: userInfo.link,
+      songName: songInfo.body.name,
+      artists: songInfo.body.artists.map((artist) => artist.name),
+      albumArt: songInfo.body.album.images[0].url,
+    };
+
+    formattedComments.push(formattedComment);
+  }
+
+  res.json(formattedComments);
 });
 
 // Getting top comments
@@ -59,15 +70,26 @@ router.get("/top", async (req, res) => {
   if (!numResults) {
     numResults = 5;
   }
-  Comment.find()
-    .sort({ votes: -1 })
-    .limit(numResults)
-    .exec((err, comments) => {
-      if (err) {
-        res.json(err);
-      }
-      res.json(comments);
-    });
+  let comments = await Comment.find().sort({ votes: -1 }).limit(numResults);
+  let formattedComments = [];
+  for (var i = 0; i < comments.length; i++) {
+    let userInfo = await User.find({ userId: comments[i].userId });
+    let songInfo = await spotifyApi.getTrack(comments[i].songId);
+
+    let formattedComment = {
+      ...comments[i].toObject(),
+      userName: userInfo.name,
+      userImage: userInfo.image,
+      userLink: userInfo.link,
+      songName: songInfo.body.name,
+      artists: songInfo.body.artists.map((artist) => artist.name),
+      albumArt: songInfo.body.album.images[0].url,
+    };
+
+    formattedComments.push(formattedComment);
+  }
+
+  res.json(formattedComments);
 });
 
 // Creating a comment
