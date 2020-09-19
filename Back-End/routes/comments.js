@@ -53,6 +53,23 @@ router.get("/recent", async (req, res) => {
     });
 });
 
+// Getting top comments
+router.get("/top", async (req, res) => {
+  let numResults = parseInt(req.query.numResults);
+  if (!numResults) {
+    numResults = 5;
+  }
+  Comment.find()
+    .sort({ votes: -1 })
+    .limit(numResults)
+    .exec((err, comments) => {
+      if (err) {
+        res.json(err);
+      }
+      res.json(comments);
+    });
+});
+
 // Creating a comment
 router.post("/", async (req, res) => {
   let currentUserId = await getCurrentUserId();
