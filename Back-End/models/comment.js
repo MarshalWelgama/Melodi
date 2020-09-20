@@ -7,6 +7,7 @@ const commentSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   songId: { type: String, required: true },
   dateTime: { type: Date, required: true, default: Date.now },
+  formattedDateTime: { type: String, required: true, default: Date.now },
   editDateTime: { type: Date, required: false },
   replies: { type: Array, required: true, default: [] },
   level: { type: Number, required: true, default: 0 },

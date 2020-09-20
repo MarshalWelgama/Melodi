@@ -68,7 +68,6 @@ router.get("/:id", getSong, (req, res) => {
 });
 
 async function getSong(req, res, next) {
-  console.log("HERE");
   let song;
   try {
     let songData = await spotifyApi.getTrack(req.params.id);
@@ -111,14 +110,11 @@ async function getSongComments(id) {
       userInfo = await User.find({ userId: comments[i].userId });
 
       let formattedReplies = [];
-      console.log(comments[i].replies.length);
       for (var j = 0; j < comments[i].replies.length; j++) {
         try {
           let replyUserInfo = await User.find({
             userId: comments[i].replies[j].userId,
           });
-          console.log("replyUserInfo", replyUserInfo);
-          console.log("comments[i].replies[j]", comments[i].replies[j]);
           formattedReplies[j] = {
             ...comments[i].replies[j],
             userName: replyUserInfo[0].name,
@@ -129,8 +125,6 @@ async function getSongComments(id) {
           continue;
         }
       }
-
-      console.log("formattedReplies", formattedReplies);
 
       comments[i] = {
         ...comments[i].toObject(),
