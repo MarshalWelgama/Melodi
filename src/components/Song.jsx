@@ -82,6 +82,7 @@ class Song extends Component {
         userId: currentUserId
       }
       this.setState({ replied })
+      console.log('sheeeeit')
       console.log(this.state)
     }
   
@@ -125,8 +126,8 @@ class Song extends Component {
       
       <div className="main-page">
       <SongHeader albumArt={this.state.song.albumArt} artist={this.state.song.artist} songName={this.state.song.name} user={this.state.user}/>
-      <Comments comments={this.state.song.comments} userId={this.state.user.userId} renderComments={this.getSongDetails} songId={songId} getReplyInfo={this.getReplyInfo}/>
-      <TextInput songId={songId} renderComments={this.getSongDetails} isReplying={this.state.replied}/>
+      <Comments comments={this.state.song.comments} userId={this.state.user.userId} renderComments={this.getSongDetails} songId={songId} getReplyInfo={this.getReplyInfo} isReplying={this.state.replied}/>
+      <TextInput getReplyInfo={this.getReplyInfo} songId={songId} renderComments={this.getSongDetails} isReplying={this.state.replied}/>
       <div style={{'paddingBottom':'175px'}}/>
 
     

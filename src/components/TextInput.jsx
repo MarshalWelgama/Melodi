@@ -51,7 +51,7 @@ class TextInput extends Component {
     }
      handleSubmit = () => {
          const { commentInput } = this.state;
-         const {songId, renderComments, isReplying} = this.props
+         const {songId, renderComments, isReplying, getReplyInfo} = this.props
          
          if (isReplying.active){
           axios.patch('http://localhost:8888/api/comments/reply', {
@@ -61,6 +61,8 @@ class TextInput extends Component {
           .then(function (response) {
             console.log(response);
             renderComments(songId);
+            getReplyInfo(false, '', '', '')
+            console.log(isReplying)
           })
           .catch(function (error) {
             console.log(error);

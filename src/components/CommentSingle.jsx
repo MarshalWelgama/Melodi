@@ -37,7 +37,7 @@ class CommentSingle extends Component {
     constructor(props) {
       super(props)
       
-      this.state = {votes: this.props.comment.votes, replyActive:true}
+      this.state = {votes: this.props.comment.votes, replyActive:false}
       console.log(this.state.votes)
     }
 
@@ -125,13 +125,23 @@ class CommentSingle extends Component {
     }
     replyHandler = () => {
       var replyButton = document.getElementById('replyButton');
-      const {comment, getReplyInfo} = this.props
-      this.setState(prevState => ({ replyActive: !prevState.replyActive }));
+      const {comment, getReplyInfo, isReplying} = this.props
       const commentId = comment._id
-      getReplyInfo(this.state.replyActive, commentId, comment.userName, comment.userId)
-      
-      
+      if(isReplying.active){
+        getReplyInfo(false, commentId, comment.userName, comment.userId)
+     
+      }
+      if(isReplying.active && isReplying.id != commentId){
+        getReplyInfo(true, commentId, comment.userName, comment.userId)
+    
+      }
+      if(isReplying.active && isReplying.id == commentId) {
+        getReplyInfo(false, commentId, comment.userName, comment.userId)
+      }
+      else{
+      getReplyInfo(true, commentId, comment.userName, comment.userId)
     }
+  }
     renderReplies() {
         const {comment, replies} = this.props
         var arr = []
@@ -176,13 +186,14 @@ class CommentSingle extends Component {
     replyIdentify = () => {
       console.log('entered')
       console.log(this.state.replyActive)
-      if (this.state.replyActive) {
+      const {isReplying, comment} = this.props
+      const commentId = comment._id
+      if (isReplying.active && isReplying.id == commentId) {
         return (
-          <Button id="replyButton" basic green icon size='mini' onClick={this.replyHandler}><Icon name='reply' /></Button>
+          <Button id="replyButton" basic className='green' icon size='mini' onClick={this.replyHandler}><Icon name='reply' /></Button>
         )}
         else {
-          console.log('righthere')
-          return ( <Button id="replyButton" basic className='green' icon size='mini' onClick={this.replyHandler}><Icon name='reply' /></Button>) 
+          return ( <Button id="replyButton" basic  icon size='mini' onClick={this.replyHandler}><Icon name='reply' /></Button>) 
         }
     }
     render() { 
