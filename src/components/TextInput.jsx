@@ -21,15 +21,16 @@ class TextInput extends Component {
     renderReplyBanner = () => {
       const { commentInput } = this.state
       const {isReplying}= this.props;
+     
       if(isReplying.active) {
       return (
         <Popup className="comment-popup"
                     open
                     position='top left'
                     size="mini"
-                    trigger={<TextArea
+                    trigger={<TextArea className="commentBox"
                       //  style={{ minHeight: 100 }}
-                        placeholder="Name"
+                        placeholder={`@${isReplying.userName}`}
                         commentInput="commentInput"
                         value={commentInput}
                         onChange={this.handleChange} />} >
@@ -41,7 +42,8 @@ class TextInput extends Component {
       return (
         <TextArea
         //  style={{ minHeight: 100 }}
-          placeholder="Name"
+        className="commentBox"
+          placeholder="Say Something"
           commentInput="commentInput"
           value={commentInput}
           onChange={this.handleChange} />
@@ -49,6 +51,7 @@ class TextInput extends Component {
     }
       
     }
+  
      handleSubmit = () => {
          const { commentInput } = this.state;
          const {songId, renderComments, isReplying, getReplyInfo} = this.props
@@ -86,7 +89,7 @@ class TextInput extends Component {
          
          
   };
-      
+ 
     render() { 
         const { commentInput } = this.state
        
@@ -98,8 +101,8 @@ class TextInput extends Component {
                     <Form className="comment-text"
                     onSubmit={this.handleSubmit}>
                       {this.renderReplyBanner()}
-                        
-                        <Button style={{ 'background':'#79C69F', 'color': 'white','margin-top': '10px' }} content='Comment' labelPosition='right' icon='arrow right' />
+                 
+                        <Button id="submitButton" style={{ 'background':'#79C69F', 'color': 'white','margin-top': '10px' }} content='Comment' labelPosition='right' icon='arrow right' />
                     </Form>
                 </div>
             </div>);
