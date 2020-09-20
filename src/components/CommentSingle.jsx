@@ -128,47 +128,52 @@ class CommentSingle extends Component {
     }
     replyHandler = () => {
       var replyButton = document.getElementById('replyButton');
-      const {comment, getReplyInfo, isReplying} = this.props
+      const {comment, getReplyInfo, isReplying, songId,renderComments} = this.props
       const commentId = comment._id
       if(isReplying.active){
         getReplyInfo(false, commentId, comment.userName, comment.userId)
+       
      
       }
       if(isReplying.active && isReplying.id != commentId){
         getReplyInfo(true, commentId, comment.userName, comment.userId)
-    
+        
       }
       if(isReplying.active && isReplying.id == commentId) {
         getReplyInfo(false, commentId, comment.userName, comment.userId)
+       
       }
       else{
       getReplyInfo(true, commentId, comment.userName, comment.userId)
+      
     }
+    
   }
     renderReplies() {
         const {comment, replies} = this.props
+        console.log('comment is') 
+        console.log(comment)
         var arr = []
          if(comment.replies.length != 0) { // check reply array length, if > 1 then return comments.
         const commentsReply = comment.replies
         for (var i = 0; i < commentsReply.length; i++) {
-        
            arr.push(commentsReply[i])
            const date = new Date(arr[i].dateTime)
-           const timeStamp = 'NEED TO PUT TIMESTAMP HERE';
-           const relativeTime = ta.ago(date);
-           arr[i].dateTime = relativeTime
-           arr[i].timeStamp = timeStamp
+           var relativeTime = ta.ago(date);
+           arr[i].relative = relativeTime
+    
          }
+      
            return (
               <CommentGroup>
-                   { arr.map(({dateTime, text, timeStamp, userName, userImage, userLink }) => ( 
+                   { arr.map(({dateTime, text, timeStamp, userName, userImage, userLink,  formattedDateTime, relative }) => ( 
                      <React.Fragment>
                     <Comment>
                   <Comment.Avatar as='a' src={userImage} />
                    <Comment.Content>
                      <Comment.Author as='a' href={userLink}>{userName} </Comment.Author>
                      <Comment.Metadata>
-                     <Popup content={timeStamp} position='top center' trigger={<span>{dateTime}</span>} />
+                     <Popup content={formattedDateTime} position='top center' trigger={<span>{relative}</span>} />
                      </Comment.Metadata>
                      <Comment.Text>{text}</Comment.Text>
                      <Comment.Actions>
