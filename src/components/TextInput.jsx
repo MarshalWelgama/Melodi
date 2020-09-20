@@ -24,7 +24,6 @@ class TextInput extends Component {
       if(isReplying.active) {
       return (
         <Popup className="comment-popup"
-                    content='Replying to Marshal Welgama'
                     open
                     position='top left'
                     size="mini"
@@ -33,8 +32,9 @@ class TextInput extends Component {
                         placeholder="Name"
                         commentInput="commentInput"
                         value={commentInput}
-                        onChange={this.handleChange} />}
-                    />
+                        onChange={this.handleChange} />} >
+        Replying to <a style={{"color":"white"}}href={"https://open.spotify.com/user/".concat(isReplying.userId)}>{isReplying.userName}</a>
+        </Popup>
       )
     }
     else {
