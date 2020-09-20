@@ -37,7 +37,7 @@ class CommentSingle extends Component {
     constructor(props) {
       super(props)
       
-      this.state = {votes: this.props.comment.votes, replyActive:false}
+      this.state = {votes: this.props.comment.votes, }
       console.log(this.state.votes)
     }
 
@@ -82,18 +82,21 @@ class CommentSingle extends Component {
                 <React.Fragment>
                                     <button onClick={this.AreYouSure}
                                             class="ui black basic button">Delete</button>
-                                    <button class="ui orange basic button">Report</button>
+                                    <button class="ui orange basic button" onClick={this.reportComment}>Report</button>
                 </React.Fragment>
             )
         }
         else {
             return(
                 <React.Fragment>
-                                    <button class="ui orange basic button">Report</button>
+                                    <button onClick={this.reportComment} href="https://forms.gle/CuG8XtGn3n2BADLw8" class="ui orange basic button">Report</button>
                 </React.Fragment>
             )
         }
         
+    }
+    reportComment = () => {
+      window.open('https://forms.gle/CuG8XtGn3n2BADLw8')
     }
     updateVotes() {
         this.setState({votes: this.state.votes + 1}, () => {
@@ -158,18 +161,23 @@ class CommentSingle extends Component {
          }
            return (
               <CommentGroup>
-                   { arr.map(({dateTime, text, timeStamp }) => ( 
+                   { arr.map(({dateTime, text, timeStamp, userName, userImage, userLink }) => ( 
                      <React.Fragment>
                     <Comment>
-                  <Comment.Avatar as='a' src='https://react.semantic-ui.com/images/avatar/small/jenny.jpg' />
+                  <Comment.Avatar as='a' src={userImage} />
                    <Comment.Content>
-                     <Comment.Author as='a'>Some random cunt </Comment.Author>
+                     <Comment.Author as='a' href={userLink}>{userName} </Comment.Author>
                      <Comment.Metadata>
                      <Popup content={timeStamp} position='top center' trigger={<span>{dateTime}</span>} />
                      </Comment.Metadata>
                      <Comment.Text>{text}</Comment.Text>
                      <Comment.Actions>
-                       <a>Reply</a>
+                             <Popup
+                               trigger={<a>Reply</a>}
+                               size="mini"
+                               content='Coming Soon'
+                               inverted
+                             />
                      </Comment.Actions>
                    </Comment.Content>
                  </Comment>
@@ -184,8 +192,6 @@ class CommentSingle extends Component {
         
     }
     replyIdentify = () => {
-      console.log('entered')
-      console.log(this.state.replyActive)
       const {isReplying, comment} = this.props
       const commentId = comment._id
       if (isReplying.active && isReplying.id == commentId) {

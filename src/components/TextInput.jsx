@@ -99,7 +99,7 @@ class TextInput extends Component {
                     onSubmit={this.handleSubmit}>
                       {this.renderReplyBanner()}
                         
-                        <Button style={{ 'margin-top': '10px' }} content='Comment' labelPosition='right' icon='arrow right' />
+                        <Button style={{ 'background':'#79C69F', 'color': 'white','margin-top': '10px' }} content='Comment' labelPosition='right' icon='arrow right' />
                     </Form>
                 </div>
             </div>);
