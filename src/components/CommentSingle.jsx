@@ -6,6 +6,7 @@ import ta from 'time-ago'
 import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import { Fade } from 'react-bootstrap';
 
 
 
@@ -35,16 +36,15 @@ class CommentSingle extends Component {
 
     constructor(props) {
       super(props)
-      console.log('this')
       
-      this.state = {votes: this.props.comment.votes}
+      this.state = {votes: this.props.comment.votes, replyActive:true}
       console.log(this.state.votes)
     }
+
     AreYouSure = () => {
         var element = document.getElementById('popupDelete');
-
         element.style.transform = 'scale(0)';
-        console.log(this.state)
+       
         confirmAlert({
           title: 'Are you sure to do this?',
           message: `Comments that are deleted can't be undone.`,
@@ -107,7 +107,6 @@ class CommentSingle extends Component {
         const commentId = comment._id
         console.log(commentId)
         axios.patch('http://localhost:8888/api/comments/vote', {
-            
             id: commentId 
           })
           .then((response) => {
@@ -124,6 +123,15 @@ class CommentSingle extends Component {
             console.log(error);
           });
     }
+    replyHandler = () => {
+      var replyButton = document.getElementById('replyButton');
+      const {comment, getReplyInfo} = this.props
+      this.setState(prevState => ({ replyActive: !prevState.replyActive }));
+      const commentId = comment._id
+      getReplyInfo(this.state.replyActive, commentId, comment.userName, comment.userId)
+      
+      
+    }
     renderReplies() {
         const {comment, replies} = this.props
         var arr = []
@@ -133,7 +141,7 @@ class CommentSingle extends Component {
         
            arr.push(commentsReply[i])
            const date = new Date(arr[i].dateTime)
-           const timeStamp = date.customFormat( "#DD# #MMMM# #YYYY# #hh#:#mm# #AMPM#" );
+           const timeStamp = 'NEED TO PUT TIMESTAMP HERE';
            const relativeTime = ta.ago(date);
            arr[i].dateTime = relativeTime
            arr[i].timeStamp = timeStamp
@@ -147,7 +155,7 @@ class CommentSingle extends Component {
                    <Comment.Content>
                      <Comment.Author as='a'>Some random cunt </Comment.Author>
                      <Comment.Metadata>
-                     <Popup content={timeStamp} trigger={<span>{dateTime}</span>} />
+                     <Popup content={timeStamp} position='top center' trigger={<span>{dateTime}</span>} />
                      </Comment.Metadata>
                      <Comment.Text>{text}</Comment.Text>
                      <Comment.Actions>
@@ -164,6 +172,18 @@ class CommentSingle extends Component {
         }
        
         
+    }
+    replyIdentify = () => {
+      console.log('entered')
+      console.log(this.state.replyActive)
+      if (this.state.replyActive) {
+        return (
+          <Button id="replyButton" basic green icon size='mini' onClick={this.replyHandler}><Icon name='reply' /></Button>
+        )}
+        else {
+          console.log('righthere')
+          return ( <Button id="replyButton" basic className='green' icon size='mini' onClick={this.replyHandler}><Icon name='reply' /></Button>) 
+        }
     }
     render() { 
        // https://api.spotify.com/v1/users/12142897666
@@ -183,13 +203,13 @@ class CommentSingle extends Component {
                 <Comment.Metadata>
                 <Popup content={timeStamp} trigger={<span>{relativeTime}</span>} />
                 <div>
-                <Icon name='utensil spoon icon' />{this.state.votes}
+                <Icon name='bomb' />{this.state.votes}
           </div>
                 </Comment.Metadata>
                 <Comment.Text style={{"margin": "4px 0px 8px 0px"}}>{comment.text}</Comment.Text>
                 <Comment.Actions >
-                <Button  basic icon onClick={this.voteHandler} size='mini'><Icon name='utensil spoon icon'/></Button>
-                <Button basic icon size='mini'><Icon name='reply' /></Button>
+                <Button  basic icon onClick={this.voteHandler} size='mini'><Icon name='bomb'/></Button>
+                {this.replyIdentify()}
                 <Popup id="popupDelete"
                     trigger={<Button floated='right' basic icon size='mini' style={{"box-shadow":"0 0 0 1px white inset"}}><Icon name='ellipsis horizontal' /></Button>}
                     content={this.deleteHandler()}

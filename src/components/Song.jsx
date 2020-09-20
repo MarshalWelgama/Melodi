@@ -12,11 +12,11 @@ import TextInput from "./TextInput";
 
 class Song extends Component {
   state = { 
- 
+    replied: { active: false, id:"", userName:"", userId:""},
     user: { name:"", image:"", userId:"", link:""}, 
     song: { songId:"", name: "Not Checked", artist: [], albumArt: "", comments: []}
   };
-  contextRef = createRef()
+  //contextRef = createRef()
 
   constructor(props) {
     super(props);
@@ -71,7 +71,20 @@ class Song extends Component {
     return songData;
   };
 
+  
 
+  getReplyInfo = (isActive, commentId, currentUserName, currentUserId) => {
+  
+      let replied = {
+        active : isActive,
+        id: commentId,
+        userName: currentUserName,
+        userId: currentUserId
+      }
+      this.setState({ replied })
+      console.log(this.state)
+    }
+  
     
     // handleClick = () => {
     // this.setState((prevState) => ({ active: !prevState.active }))
@@ -85,7 +98,6 @@ class Song extends Component {
     console.log(commentsArray);
     let commentsActive = (Array.isArray(commentsArray) && commentsArray.length);
     console.log(commentsActive)
-    const {active} = this.state
     const {songId}=this.state.song
     return (
       // <div className="main-page container-fluid justify-content-center">
@@ -113,8 +125,8 @@ class Song extends Component {
       
       <div className="main-page">
       <SongHeader albumArt={this.state.song.albumArt} artist={this.state.song.artist} songName={this.state.song.name} user={this.state.user}/>
-      <Comments comments={this.state.song.comments} userId={this.state.user.userId} renderComments={this.getSongDetails} songId={songId}/>
-      <TextInput songId={songId} renderComments={this.getSongDetails}/>
+      <Comments comments={this.state.song.comments} userId={this.state.user.userId} renderComments={this.getSongDetails} songId={songId} getReplyInfo={this.getReplyInfo}/>
+      <TextInput songId={songId} renderComments={this.getSongDetails} isReplying={this.state.replied}/>
       <div style={{'paddingBottom':'175px'}}/>
 
     

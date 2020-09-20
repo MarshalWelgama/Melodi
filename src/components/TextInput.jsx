@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from "axios";
-import { Form, Button, TextArea} from "semantic-ui-react";
+import { Form, Button, TextArea, Popup} from "semantic-ui-react";
+import "./TextInput.css";
 const footerStyle = {
     backgroundColor: "white",
     borderTop: "1px solid #E7E7E7",
@@ -17,15 +18,46 @@ const footerStyle = {
 class TextInput extends Component {
     state = { commentInput:''}
     handleChange = (e, { commentInput, value }) => this.setState({ [commentInput]: value });
-
+    renderReplyBanner = () => {
+      const { commentInput } = this.state
+      const {isReplying}= this.props;
+      if(isReplying.active) {
+      return (
+        <Popup className="comment-popup"
+                    content='Replying to Marshal Welgama'
+                    open
+                    position='top left'
+                    size="mini"
+                    trigger={<TextArea
+                      //  style={{ minHeight: 100 }}
+                        placeholder="Name"
+                        commentInput="commentInput"
+                        value={commentInput}
+                        onChange={this.handleChange} />}
+                    />
+      )
+    }
+    else {
+      return (
+        <TextArea
+        //  style={{ minHeight: 100 }}
+          placeholder="Name"
+          commentInput="commentInput"
+          value={commentInput}
+          onChange={this.handleChange} />
+      )
+    }
+      
+    }
      handleSubmit = () => {
          const { commentInput } = this.state;
-         const {songId, renderComments} = this.props
+         const {songId, renderComments, isReplying} = this.props
          
-         axios.post('http://localhost:8888/api/comments/', {
-            songId:songId, //song ID
+         if (isReplying.active){
+          axios.patch('http://localhost:8888/api/comments/reply', {
+            id:`${isReplying.id}`, //song ID
             text:commentInput //Input
-          })
+          })  
           .then(function (response) {
             console.log(response);
             renderComments(songId);
@@ -34,21 +66,37 @@ class TextInput extends Component {
             console.log(error);
           });
           this.setState({ commentInput: '' })
+         }
+         else{
+          axios.post('http://localhost:8888/api/comments/', {
+            songId:songId, //song ID
+            text:commentInput //Input
+          })  
+          .then(function (response) {
+            console.log(response);
+            renderComments(songId);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+          this.setState({ commentInput: '' })
+         }
          
-
+         
   };
-
+      
     render() { 
         const { commentInput } = this.state
+       
         return (  
+          
             <div>
+             
                 <div style={footerStyle}>
-                    <Form style={{ 'width': '40%', 'padding-top': '10px' }} onSubmit={this.handleSubmit}>
-                        <TextArea
-                            placeholder="Name"
-                            commentInput="commentInput"
-                            value={commentInput}
-                            onChange={this.handleChange} />
+                    <Form className="comment-text"
+                    onSubmit={this.handleSubmit}>
+                      {this.renderReplyBanner()}
+                        
                         <Button style={{ 'margin-top': '10px' }} content='Comment' labelPosition='right' icon='arrow right' />
                     </Form>
                 </div>
