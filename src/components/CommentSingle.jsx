@@ -6,6 +6,7 @@ import ta from 'time-ago'
 import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import { Fade } from 'react-bootstrap';
 
 
 
@@ -35,16 +36,15 @@ class CommentSingle extends Component {
 
     constructor(props) {
       super(props)
-      console.log('this')
       
-      this.state = {votes: this.props.comment.votes}
+      this.state = {votes: this.props.comment.votes, }
       console.log(this.state.votes)
     }
+
     AreYouSure = () => {
         var element = document.getElementById('popupDelete');
-
         element.style.transform = 'scale(0)';
-        console.log(this.state)
+       
         confirmAlert({
           title: 'Are you sure to do this?',
           message: `Comments that are deleted can't be undone.`,
@@ -82,18 +82,21 @@ class CommentSingle extends Component {
                 <React.Fragment>
                                     <button onClick={this.AreYouSure}
                                             class="ui black basic button">Delete</button>
-                                    <button class="ui orange basic button">Report</button>
+                                    <button class="ui orange basic button" onClick={this.reportComment}>Report</button>
                 </React.Fragment>
             )
         }
         else {
             return(
                 <React.Fragment>
-                                    <button class="ui orange basic button">Report</button>
+                                    <button onClick={this.reportComment} href="https://forms.gle/CuG8XtGn3n2BADLw8" class="ui orange basic button">Report</button>
                 </React.Fragment>
             )
         }
         
+    }
+    reportComment = () => {
+      window.open('https://forms.gle/CuG8XtGn3n2BADLw8')
     }
     updateVotes() {
         this.setState({votes: this.state.votes + 1}, () => {
@@ -107,7 +110,6 @@ class CommentSingle extends Component {
         const commentId = comment._id
         console.log(commentId)
         axios.patch('http://localhost:8888/api/comments/vote', {
-            
             id: commentId 
           })
           .then((response) => {
@@ -124,6 +126,25 @@ class CommentSingle extends Component {
             console.log(error);
           });
     }
+    replyHandler = () => {
+      var replyButton = document.getElementById('replyButton');
+      const {comment, getReplyInfo, isReplying} = this.props
+      const commentId = comment._id
+      if(isReplying.active){
+        getReplyInfo(false, commentId, comment.userName, comment.userId)
+     
+      }
+      if(isReplying.active && isReplying.id != commentId){
+        getReplyInfo(true, commentId, comment.userName, comment.userId)
+    
+      }
+      if(isReplying.active && isReplying.id == commentId) {
+        getReplyInfo(false, commentId, comment.userName, comment.userId)
+      }
+      else{
+      getReplyInfo(true, commentId, comment.userName, comment.userId)
+    }
+  }
     renderReplies() {
         const {comment, replies} = this.props
         var arr = []
@@ -133,25 +154,30 @@ class CommentSingle extends Component {
         
            arr.push(commentsReply[i])
            const date = new Date(arr[i].dateTime)
-           const timeStamp = date.customFormat( "#DD# #MMMM# #YYYY# #hh#:#mm# #AMPM#" );
+           const timeStamp = 'NEED TO PUT TIMESTAMP HERE';
            const relativeTime = ta.ago(date);
            arr[i].dateTime = relativeTime
            arr[i].timeStamp = timeStamp
          }
            return (
               <CommentGroup>
-                   { arr.map(({dateTime, text, timeStamp }) => ( 
+                   { arr.map(({dateTime, text, timeStamp, userName, userImage, userLink }) => ( 
                      <React.Fragment>
                     <Comment>
-                  <Comment.Avatar as='a' src='https://react.semantic-ui.com/images/avatar/small/jenny.jpg' />
+                  <Comment.Avatar as='a' src={userImage} />
                    <Comment.Content>
-                     <Comment.Author as='a'>Some random cunt </Comment.Author>
+                     <Comment.Author as='a' href={userLink}>{userName} </Comment.Author>
                      <Comment.Metadata>
-                     <Popup content={timeStamp} trigger={<span>{dateTime}</span>} />
+                     <Popup content={timeStamp} position='top center' trigger={<span>{dateTime}</span>} />
                      </Comment.Metadata>
                      <Comment.Text>{text}</Comment.Text>
                      <Comment.Actions>
-                       <a>Reply</a>
+                             <Popup
+                               trigger={<a>Reply</a>}
+                               size="mini"
+                               content='Coming Soon'
+                               inverted
+                             />
                      </Comment.Actions>
                    </Comment.Content>
                  </Comment>
@@ -164,6 +190,17 @@ class CommentSingle extends Component {
         }
        
         
+    }
+    replyIdentify = () => {
+      const {isReplying, comment} = this.props
+      const commentId = comment._id
+      if (isReplying.active && isReplying.id == commentId) {
+        return (
+          <Button id="replyButton" basic className='green' icon size='mini' onClick={this.replyHandler}><Icon name='reply' /></Button>
+        )}
+        else {
+          return ( <Button id="replyButton" basic  icon size='mini' onClick={this.replyHandler}><Icon name='reply' /></Button>) 
+        }
     }
     render() { 
        // https://api.spotify.com/v1/users/12142897666
@@ -183,13 +220,13 @@ class CommentSingle extends Component {
                 <Comment.Metadata>
                 <Popup content={timeStamp} trigger={<span>{relativeTime}</span>} />
                 <div>
-                <Icon name='utensil spoon icon' />{this.state.votes}
+                <Icon name='bomb' />{this.state.votes}
           </div>
                 </Comment.Metadata>
                 <Comment.Text style={{"margin": "4px 0px 8px 0px"}}>{comment.text}</Comment.Text>
                 <Comment.Actions >
-                <Button  basic icon onClick={this.voteHandler} size='mini'><Icon name='utensil spoon icon'/></Button>
-                <Button basic icon size='mini'><Icon name='reply' /></Button>
+                <Button  basic icon onClick={this.voteHandler} size='mini'><Icon name='bomb'/></Button>
+                {this.replyIdentify()}
                 <Popup id="popupDelete"
                     trigger={<Button floated='right' basic icon size='mini' style={{"box-shadow":"0 0 0 1px white inset"}}><Icon name='ellipsis horizontal' /></Button>}
                     content={this.deleteHandler()}

@@ -1,0 +1,20 @@
+.comment-text {
+    width: 50%;
+    padding-top: 10px;
+}
+.comment-popup{
+    background: #79C69F !important;
+    color: #fff !important;
+    border: black !important;
+   
+}
+.ui.top.left.mini.popup.transition.visible.comment-popup:before {
+    background: #79C69F !important;
+    border: none !important;
+    box-shadow: unset !important;
+}
+@media only screen and (max-width: 700px) {
+    .comment-text {
+        width: initial;
+    }
+}
