@@ -1,48 +1,33 @@
 import React, { Component } from "react";
+import { Image, Popup, Icon } from 'semantic-ui-react'
 import "./LandingPage.css";
-import "bootstrap/dist/css/bootstrap.css";
-import Tooltip from "react-bootstrap/Tooltip";
-import { OverlayTrigger, Button } from "react-bootstrap";
+
 class LandingPage extends Component {
   state = {};
   render() {
     return (
       <div className="login-page">
-        <img className="logo-img" src="/logo.png"></img>
-        <div className="description-text">
-          <h2 className="info-text">
-            Join the Waitlist to stay updated
-            <OverlayTrigger
-              placement={"top"}
-              overlay={
-                <Tooltip className="tooltip-info">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged. It was popularised in the 1960s with
-                  the release of Letraset sheets containing Lorem Ipsum
-                  passages, and more recently with desktop publishing software
-                  like Aldus PageMaker including versions of Lorem Ipsum.
-                </Tooltip>
-              }
-            >
-              <h2 className="hover-text">What is this Project?</h2>
-            </OverlayTrigger>
-          </h2>
-          <input
-            className="form-box py-4"
-            type="email"
-            id="email"
-            placeholder="       Enter Your Email"
-            pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-          />
-        </div>
-        <a href="http://localhost:8888/login" className="login-button">
+   
+        <div className="contentBorder">
+        <Image className="logo-img" src="/melodi-logo.png" verticalAlign='top' />
+      <br></br>
+      <div className="CallToAction">
+        <div style={{"display" : "inline-block"}}>
+        <a style={{"text-decoration":'none', 'color':'black'}}href="http://localhost:8888/login" className="login-button">
           LOGIN WITH SPOTIFY
         </a>
+        </div>
+        <div classname="whatis" style={{'grid-row': '2/2', "paddingTop":"15px"}}>
+        <Popup
+          trigger={   <span  style={{"padding-top": "10px"}}>what is this project?</span>}
+          content='Melodi allows you to add comments to your favourite music!'
+          position='bottom center'
+        />
+     
+        </div>
+        </div>
+        </div>
+       <footer className='main-footer' ><a style={{"padding-right":"10px", "text-decoration":'none', 'color':'#9FA0A1'}}href="https://github.com/MarshalWelgama/Spotify-Connect"><Icon name='github'/>Github</a><a style={{"text-decoration":'none', 'color':'#9FA0A1'}}href='https://www.linkedin.com/in/marshal-welgama-968459193/'><Icon name='linkedin'/>LinkedIn</a><a href="#" style={{'padding-left':'10px', 'color':'#9FA0A1', 'text-decoration':'none'}}>Contact Me</a></footer>
       </div>
     );
   }
