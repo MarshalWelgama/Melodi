@@ -3,6 +3,7 @@ import "./Main.css";
 import axios from "axios";
 import { Search } from "semantic-ui-react";
 import SearchBar from "./SearchBar";
+import FooterInfo from "./FooterInfo";
 
 
 
@@ -53,16 +54,21 @@ class Main extends Component {
       
               {this.state.loggedIn && (
                 <div className="main-page">
-                  <header>MELODI </header>
+                  <header><img className="header-img" src="/melodi-logo.png" verticalAlign='top' /> </header>
                   <h1 className="title">Where to?</h1>
-                  <div className="actions">
+                  <div className="main-actions">
                  <a style={{"text-decoration":'none', 'color':'black'}}className="main-button"
                   onClick={() => this.getNowPlaying()}>
                  Now Playing
                </a>
-               <SearchBar></SearchBar>
+               <div className="search-bar" >
+               <SearchBar ></SearchBar>
                </div>
                </div>
+               <div></div>
+               <FooterInfo/>
+               </div>
+              
               )}
             
         </React.Fragment>
