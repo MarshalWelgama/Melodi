@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import "./Main.css";
 import axios from "axios";
+import { Search } from "semantic-ui-react";
+import SearchBar from "./SearchBar";
+
+
 
 class Main extends Component {
   state = {
@@ -42,38 +46,26 @@ class Main extends Component {
     return nowPlayingData;
   };
 
+  
   render() {
     return (
-      <div className="main-page container-fluid justify-content-center">
-        <div
-          className="row justify-content-center p-4"
-          style={{ height: "50%" }}
-        >
-          <img
-            src={this.state.nowPlaying.albumArt}
-            style={{ maxWidth: "100%", maxHeight: "100%" }}
-          />
-        </div>
-        <div className="row my-auto" style={{ height: "50%" }}>
-          <div className="col">
-            <div className="row justify-content-center">
-              <h2 className="info-text">
-                Now Playing: {this.state.nowPlaying.name}
-              </h2>
-            </div>
-            <div className="row justify-content-center">
+      <React.Fragment>
+      
               {this.state.loggedIn && (
-                <button
-                  className="main-button"
-                  onClick={() => this.getNowPlaying()}
-                >
-                  Check Now Playing
-                </button>
+                <div className="main-page">
+                  <header>MELODI </header>
+                  <h1 className="title">Where to?</h1>
+                  <div className="actions">
+                 <a style={{"text-decoration":'none', 'color':'black'}}className="main-button"
+                  onClick={() => this.getNowPlaying()}>
+                 Now Playing
+               </a>
+               <SearchBar></SearchBar>
+               </div>
+               </div>
               )}
-            </div>
-          </div>
-        </div>
-      </div>
+            
+        </React.Fragment>
     );
   }
 }
