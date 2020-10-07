@@ -4,6 +4,7 @@ import axios from "axios";
 import { Search } from "semantic-ui-react";
 import SearchBar from "./SearchBar";
 import FooterInfo from "./FooterInfo";
+import RecentBox from "./RecentBox";
 
 
 
@@ -51,27 +52,35 @@ class Main extends Component {
   render() {
     return (
       <React.Fragment>
-      
-              {this.state.loggedIn && (
-                <div className="main-page">
-                  <header><img className="header-img" src="/melodi-logo.png" verticalAlign='top' /> </header>
-                  <h1 className="title">Where to?</h1>
-                  <div className="main-actions">
-                 <a style={{"text-decoration":'none', 'color':'black'}}className="main-button"
-                  onClick={() => this.getNowPlaying()}>
-                 Now Playing
+
+        {this.state.loggedIn && (
+          <div className="main-page">
+            <div className="melodi-header">
+            <header><img className="header-img" src="/melodi-logo.png" verticalAlign='top' /> </header>
+            </div>
+            <div>
+            <h1 className="title">Where to?</h1>
+            </div>
+            <div className="main-actions">
+              <a href="#" style={{ "text-decoration": 'none', 'color': 'black' }} className="main-button"
+                onClick={() => this.getNowPlaying()}>
+                Now Playing
                </a>
-               <div className="search-bar" >
-               <SearchBar ></SearchBar>
-               </div>
-               </div>
-               <div></div>
-               <FooterInfo/>
-               </div>
-              
-              )}
+              <div className="search-bar" >
+                <SearchBar ></SearchBar>
+              </div>
+            </div> {/*main actions*/}
             
-        </React.Fragment>
+            <div className="quick-actions">
+              <RecentBox style={{'width':'350px !important'}} />
+              <RecentBox />
+            </div>
+            <FooterInfo className="footer-info" />
+          </div>
+
+        )}
+
+      </React.Fragment>
     );
   }
 }
