@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
 import axios from 'axios'
+import * as _ from 'lodash';
 import './Main.css'
 class SearchBar extends Component {
   constructor() {
@@ -13,6 +14,11 @@ class SearchBar extends Component {
         suggestions: []
     };
 }
+componentWillMount() {
+    this.onSuggestionsFetchRequested = _.debounce(
+      this.onSuggestionsFetchRequested,300
+    )
+  }
 
 // Filter logic
 getSuggestions = async (value) => {
