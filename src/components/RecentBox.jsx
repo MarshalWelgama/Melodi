@@ -3,7 +3,7 @@ import { Icon, Image, Item, Card } from 'semantic-ui-react'
 
 const description = () => {
     return (
-      <React.Fragment>
+      <React.Fragment className="song-line-desc">
         <div>
           <img className="song-album-art"src="https://react.semantic-ui.com/images/wireframe/image.png"/>
         </div>
@@ -16,8 +16,8 @@ const description = () => {
     );
   };
   const CardExampleExtraContent = () => (
-    <Card style={{'margin': '0', 'width':'350px'}}>
-      <Card.Content header="Recent Comments" />
+    <Card className="card-parent"style={{'margin': '0', 'width':'350px'}}>
+      <Card.Content className="card-header" header="Recent Comments" />
       <Card.Content className="song-line"description={description} />
       <Card.Content className="song-line"description={description} />
       <Card.Content className="song-line"description={description} />

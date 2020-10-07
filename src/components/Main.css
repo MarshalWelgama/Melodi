@@ -180,7 +180,18 @@ input:focus {
 .song-line{
   display:grid;
   grid-template-columns: auto 1fr;
+  opacity: 1;
 }
+.card-header:hover {
+  opacity: 1;
+}
+.card-parent:hover > .song-line {
+  opacity: 0.2;
+}
+.card-parent:hover > div:hover {
+  opacity: 1.0;
+}
+
 
 .song-line-info{
   display:grid;
