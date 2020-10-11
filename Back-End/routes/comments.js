@@ -168,11 +168,12 @@ router.get("/top", async (req, res) => {
     let userInfo = await User.find({ userId: comments[i].userId });
     let songInfo = await spotifyApi.getTrack(comments[i].songId);
 
+
     let formattedComment = {
       ...comments[i].toObject(),
-      userName: userInfo.name,
-      userImage: userInfo.image,
-      userLink: userInfo.link,
+      userName: userInfo[0].name,
+      userImage: userInfo[0].image,
+      userLink: userInfo[0].link,
       songName: songInfo.body.name,
       artists: songInfo.body.artists.map((artist) => artist.name),
       albumArt: songInfo.body.album.images[0].url,
