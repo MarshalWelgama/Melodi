@@ -3,13 +3,13 @@
     padding-top: 10px;
 }
 .comment-popup{
-    background: #79C69F !important;
+    background: #0fc99d !important;
     color: #fff !important;
     border: black !important;
    
 }
 .ui.top.left.mini.popup.transition.visible.comment-popup:before {
-    background: #79C69F !important;
+    background: #0fc99d !important;
     border: none !important;
     box-shadow: unset !important;
 }

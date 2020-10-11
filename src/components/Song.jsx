@@ -38,7 +38,7 @@ class Song extends Component {
         name: userData.data.name,
         image: userData.data.image,
         userId: userData.data.userId,
-        link: userData.data.link
+        link: userData.data.link.length
       }
       this.setState({user})
       console.log(this.state.user)

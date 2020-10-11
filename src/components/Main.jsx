@@ -4,7 +4,8 @@ import axios from "axios";
 import { Search } from "semantic-ui-react";
 import SearchBar from "./SearchBar";
 import FooterInfo from "./FooterInfo";
-import RecentBox from "./RecentBox";
+import RecentSongsContainer from "./RecentSongsContainer";
+import TopCommentsContainer from "./TopCommentsContainer";
 
 
 
@@ -72,8 +73,8 @@ class Main extends Component {
             </div> {/*main actions*/}
             
             <div className="quick-actions">
-              <RecentBox style={{'width':'350px !important'}} />
-              <RecentBox />
+             <RecentSongsContainer/>
+            <TopCommentsContainer/>
             </div>
             <FooterInfo className="footer-info" />
           </div>
