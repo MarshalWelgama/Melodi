@@ -24,7 +24,7 @@ class RecentBox extends Component {
     const {data, name} = this.props
     console.log(this.props.data)
     return (
-      <Card className="card-parent"style={{'margin': '0', 'width':'350px'}}>
+      <Card className="card-parent"style={{'margin': '0', 'width':'400px'}}>
       <Card.Content className="card-header" header={name} />
   { data.map(details => (
     <Card.Content onClick={() => {window.location.replace(`http://localhost:3000/songs/${details.songId}`)}} className="song-line"description={this.description(details)} />

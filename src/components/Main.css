@@ -219,6 +219,10 @@ input:focus {
     grid-gap: 20px;
     padding-top: 20px;
   }
+  
+  .ui.card.card-parent{
+    width: 350px !important;
+  }
  
 }
 @keyframes fadein {
