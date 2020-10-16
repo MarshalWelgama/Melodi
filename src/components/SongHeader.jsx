@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Header, Icon, Image, Segment } from 'semantic-ui-react'
+import "./SongHeader.css";
 
 
 class SongHeader extends Component {
@@ -23,12 +24,21 @@ class SongHeader extends Component {
         return (
             
             <Segment>
-                <Header as='h3' textAlign='left'>
-                <div><Icon name='user outline' />  <a href={user.link}>   {user.name}</a></div>
-           
+              <div className="now-playing-header">
+              <Header as='h3' textAlign='left'>
+              
+                <div>
+                  <a><Icon name='user outline'/>  <a href={user.link} style={{"color":"#4A4A4A"}}>   {user.name}</a> </a>
+                  <div>
+                  <Icon name='home' />  <a href="/main" style={{"color":"#4A4A4A"}}>Home Page</a>
+                  </div>
+                
+                  
+                </div>
                 </Header>
                
                 <Header as='h2'>
+            
                     <Image circular src={albumArt} />
                     <Header.Content>
                         {songName}
@@ -37,6 +47,8 @@ class SongHeader extends Component {
                         </Header.Subheader>
                     </Header.Content>
                 </Header>
+              </div>
+                
              
             </Segment>
         );
