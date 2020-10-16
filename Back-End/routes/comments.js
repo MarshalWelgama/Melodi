@@ -131,9 +131,15 @@ router.get("/", getComment, async (req, res) => {
 // Getting recent comments
 router.get("/recent", async (req, res) => {
   let numResults = parseInt(req.query.numResults);
+in  let duplicateSongs = req.query.duplicateSongs?.toLowerCase() === "true";
   if (!numResults) {
     numResults = 5;
   }
+
+  if (!duplicateSongs) {
+    duplicateSongs = true;
+  }
+
   let comments = await Comment.find().sort({ _id: -1 }).limit(numResults);
   let formattedComments = [];
   for (var i = 0; i < comments.length; i++) {
@@ -150,7 +156,17 @@ router.get("/recent", async (req, res) => {
       albumArt: songInfo.body.album.images[0].url,
     };
 
-    formattedComments.push(formattedComment);
+    if (duplicateSongs) {
+      formattedComments.push(formattedComment);
+    } else {
+      if (
+        !formattedComments.some(
+          (comment) => comment.songName === songInfo.body.name
+        )
+      ) {
+        formattedComments.push(formattedComment);
+      }
+    }
   }
 
   res.json(formattedComments);
@@ -167,7 +183,6 @@ router.get("/top", async (req, res) => {
   for (var i = 0; i < comments.length; i++) {
     let userInfo = await User.find({ userId: comments[i].userId });
     let songInfo = await spotifyApi.getTrack(comments[i].songId);
-
 
     let formattedComment = {
       ...comments[i].toObject(),
