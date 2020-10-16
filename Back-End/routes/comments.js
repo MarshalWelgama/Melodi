@@ -131,7 +131,7 @@ router.get("/", getComment, async (req, res) => {
 // Getting recent comments
 router.get("/recent", async (req, res) => {
   let numResults = parseInt(req.query.numResults);
-in  let duplicateSongs = req.query.duplicateSongs?.toLowerCase() === "true";
+  let duplicateSongs = req.query.duplicateSongs?.toLowerCase() === "true";
   if (!numResults) {
     numResults = 5;
   }
