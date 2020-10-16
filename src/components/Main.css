@@ -184,12 +184,15 @@ input:focus {
 }
 .card-header:hover {
   opacity: 1;
+ 
 }
 .card-parent:hover > .song-line {
   opacity: 0.2;
+  cursor: pointer;
 }
 .card-parent:hover > div:hover {
   opacity: 1.0;
+  
 }
 
 
