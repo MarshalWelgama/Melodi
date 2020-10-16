@@ -32,14 +32,16 @@ router.get("/current", function (req, res) {
             console.log(docs[0]);
             res.json(docs[0]);
           } else {
-            console.log(response.body.images)
+            console.log(response.body.images);
             userData = {
               userId: response.body.id,
               name: response.body.display_name,
               email: response.body.email,
               countryCode: response.body.country,
               image:
-                response.body.images.length == 0 ? "" : response.body.images[0].url,
+                response.body.images.length == 0
+                  ? ""
+                  : response.body.images[0].url,
               link: response.body.external_urls.spotify,
             };
             User.create(userData, function (err, docs) {
