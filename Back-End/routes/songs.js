@@ -134,7 +134,8 @@ async function getSongComments(id) {
         replies: formattedReplies,
       };
     }
-    return comments;
+
+    return comments.reverse();
   } catch (err) {
     return { message: err.message };
   }
