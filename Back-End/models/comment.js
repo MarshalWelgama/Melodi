@@ -11,6 +11,7 @@ const commentSchema = new mongoose.Schema({
   editDateTime: { type: Date, required: false },
   replies: { type: Array, required: true, default: [] },
   level: { type: Number, required: true, default: 0 },
+  parentId: { type: String, required: false },
 });
 
 module.exports = mongoose.model("Comment", commentSchema);

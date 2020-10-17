@@ -243,6 +243,31 @@ router.patch("/vote", getComment, async (req, res) => {
         },
         { new: true }
       );
+
+      // Update parent comment replies
+      if (updatedComment.parentId) {
+        let parent = await Comment.find({ _id: updatedComment.parentId });
+        let parentReplies = parent[0].replies;
+        // Modify parent replies
+        parentReplies = parentReplies.map((reply) => {
+          if (reply._id.toString() == updatedComment._id.toString()) {
+            return updatedComment;
+          } else {
+            return reply;
+          }
+        });
+
+        const updatedParent = await Comment.findOneAndUpdate(
+          {
+            _id: updatedComment.parentId,
+          },
+          {
+            replies: parentReplies,
+          },
+          { new: true }
+        );
+      }
+
       // const updatedComment = await res.comment.save();
       res.json(updatedComment);
     }
@@ -255,7 +280,6 @@ router.patch("/vote", getComment, async (req, res) => {
 router.patch("/reply", getComment, async (req, res) => {
   try {
     let currentUserId = await getCurrentUserId();
-
     let commentReply = {
       userId: currentUserId,
       text: req.body.text,
@@ -266,6 +290,7 @@ router.patch("/reply", getComment, async (req, res) => {
       editDateTime: "",
       votes: 0,
       level: 1,
+      parentId: res.comment[0]._id,
     };
     const comment = new Comment(commentReply);
 
@@ -273,9 +298,7 @@ router.patch("/reply", getComment, async (req, res) => {
       const newComment = await comment.save();
       const updatedComment = await Comment.findOneAndUpdate(
         {
-          songId: res.comment[0].songId,
-          dateTime: res.comment[0].dateTime,
-          userId: res.comment[0].userId,
+          _id: res.comment[0]._id,
         },
         {
           replies: [...res.comment[0].replies, newComment],
