@@ -7,14 +7,17 @@ import SongHeader from "./SongHeader";
 import { Form, Button, TextArea, Sticky, Ref } from "semantic-ui-react";
 import TextInput from "./TextInput";
 
-
-
-
 class Song extends Component {
-  state = { 
-    replied: { active: false, id:"", userName:"", userId:""},
-    user: { name:"", image:"", userId:"", link:""}, 
-    song: { songId:"", name: "Not Checked", artist: [], albumArt: "", comments: []}
+  state = {
+    replied: { active: false, id: "", userName: "", userId: "" },
+    user: { name: "", image: "", userId: "", link: "" },
+    song: {
+      songId: "",
+      name: "Not Checked",
+      artist: [],
+      albumArt: "",
+      comments: [],
+    },
   };
   //contextRef = createRef()
 
@@ -24,45 +27,43 @@ class Song extends Component {
     console.log("songId in constructor - ", songId);
     this.getSongDetails(songId);
   }
-  
+
   componentDidMount() {
     this.getUserDetails();
   }
-  
 
   getUserDetails = async () => {
     let userData = await axios.get("http://localhost:8888/api/users/current");
-    let user
+    let user;
     if (userData.data.userId) {
-      user= {
+      user = {
         name: userData.data.name,
         image: userData.data.image,
         userId: userData.data.userId,
-        link: userData.data.link
-      }
-      this.setState({user})
-      console.log(this.state.user)
-     // this.setState({ loggedIn: true });
+        link: userData.data.link,
+      };
+      this.setState({ user });
+      console.log(this.state.user);
+      // this.setState({ loggedIn: true });
     } else {
       console.log("ELSE TRIGGERED");
     }
     return userData;
   };
 
- 
   getSongDetails = async (songId) => {
     let songData = await axios.get(
       "http://localhost:8888/api/songs/".concat(songId)
     );
-    console.log('updated')
-    console.log(songData)
-    if (songData.data) { 
+    console.log("updated");
+    console.log(songData);
+    if (songData.data) {
       let song = {
         name: songData.data.songName,
         artist: songData.data.artistsName,
         albumArt: songData.data.albumArt,
         comments: songData.data.comments,
-        songId: songData.data.songId
+        songId: songData.data.songId,
       };
       this.setState({ song });
     } else {
@@ -71,35 +72,29 @@ class Song extends Component {
     return songData;
   };
 
-  
-
   getReplyInfo = (isActive, commentId, currentUserName, currentUserId) => {
-  
-      let replied = {
-        active : isActive,
-        id: commentId,
-        userName: currentUserName,
-        userId: currentUserId
-      }
-      this.setState({ replied })
-      console.log('sheeeeit')
-      console.log(this.state)
-    }
-  
-    
-    // handleClick = () => {
-    // this.setState((prevState) => ({ active: !prevState.active }))
-    //   console.log(this.state)
-    // }
+    let replied = {
+      active: isActive,
+      id: commentId,
+      userName: currentUserName,
+      userId: currentUserId,
+    };
+    this.setState({ replied });
+    console.log("sheeeeit");
+    console.log(this.state);
+  };
 
-    
-    
+  // handleClick = () => {
+  // this.setState((prevState) => ({ active: !prevState.active }))
+  //   console.log(this.state)
+  // }
+
   render() {
-    const commentsArray = this.state.song.comments
+    const commentsArray = this.state.song.comments;
     console.log(commentsArray);
-    let commentsActive = (Array.isArray(commentsArray) && commentsArray.length);
-    console.log(commentsActive)
-    const {songId}=this.state.song
+    let commentsActive = Array.isArray(commentsArray) && commentsArray.length;
+    console.log(commentsActive);
+    const { songId } = this.state.song;
     return (
       // <div className="main-page container-fluid justify-content-center">
       //   <div
@@ -123,14 +118,29 @@ class Song extends Component {
       //     </div>
       //   </div>
       // </div>
-      
-      <div className="main-page">
-      <SongHeader albumArt={this.state.song.albumArt} artist={this.state.song.artist} songName={this.state.song.name} user={this.state.user}/>
-      <Comments comments={this.state.song.comments} userId={this.state.user.userId} renderComments={this.getSongDetails} songId={songId} getReplyInfo={this.getReplyInfo} isReplying={this.state.replied}/>
-      <TextInput getReplyInfo={this.getReplyInfo} songId={songId} renderComments={this.getSongDetails} isReplying={this.state.replied}/>
-      <div style={{'paddingBottom':'175px'}}/>
 
-    
+      <div className="main-page">
+        <SongHeader
+          albumArt={this.state.song.albumArt}
+          artist={this.state.song.artist}
+          songName={this.state.song.name}
+          user={this.state.user}
+        />
+        <Comments
+          comments={this.state.song.comments}
+          userId={this.state.user.userId}
+          renderComments={this.getSongDetails}
+          songId={songId}
+          getReplyInfo={this.getReplyInfo}
+          isReplying={this.state.replied}
+        />
+        <TextInput
+          getReplyInfo={this.getReplyInfo}
+          songId={songId}
+          renderComments={this.getSongDetails}
+          isReplying={this.state.replied}
+        />
+        <div style={{ paddingBottom: "175px" }} />
       </div>
     );
   }
