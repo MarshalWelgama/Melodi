@@ -40,7 +40,7 @@ router.get("/current", function (req, res) {
               countryCode: response.body.country,
               image:
                 response.body.images.length == 0
-                  ? ""
+                  ? "https://semantic-ui.com/images/avatar2/small/patrick.png"
                   : response.body.images[0].url,
               link: response.body.external_urls.spotify,
             };
