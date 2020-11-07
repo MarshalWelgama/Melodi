@@ -3,7 +3,13 @@ import "./App.css";
 import LandingPage from "./components/LandingPage";
 import Main from "./components/Main";
 import Song from "./components/Song";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 
 function App() {
   return (
@@ -13,9 +19,9 @@ function App() {
           <Route path="/" exact component={LandingPage} />
           <Route path="/main" component={Main} />
           <Route path="/songs/:songId">
-            {" "}
-            <Song />{" "}
+            <Song />
           </Route>
+          <Route component={LandingPage} />
         </Switch>
       </Router>
     </div>

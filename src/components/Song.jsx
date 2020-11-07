@@ -52,24 +52,30 @@ class Song extends Component {
   };
 
   getSongDetails = async (songId) => {
-    let songData = await axios.get(
-      "http://localhost:8888/api/songs/".concat(songId)
-    );
-    console.log("updated");
-    console.log(songData);
-    if (songData.data) {
-      let song = {
-        name: songData.data.songName,
-        artist: songData.data.artistsName,
-        albumArt: songData.data.albumArt,
-        comments: songData.data.comments,
-        songId: songData.data.songId,
-      };
-      this.setState({ song });
-    } else {
-      console.log("ELSE TRIGGERED");
+    try {
+      let songData = await axios.get(
+        "http://localhost:8888/api/songs/".concat(songId)
+      );
+
+      console.log("updated");
+      console.log(songData);
+      if (songData.data) {
+        let song = {
+          name: songData.data.songName,
+          artist: songData.data.artistsName,
+          albumArt: songData.data.albumArt,
+          comments: songData.data.comments,
+          songId: songData.data.songId,
+        };
+        this.setState({ song });
+      } else {
+        console.log("NO SONGGG");
+      }
+      console.log("this si song data", songData);
+      return songData;
+    } catch (error) {
+      window.location.replace("/main");
     }
-    return songData;
   };
 
   getReplyInfo = (isActive, commentId, currentUserName, currentUserId) => {
