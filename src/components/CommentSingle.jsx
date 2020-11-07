@@ -191,13 +191,12 @@ class CommentSingle extends Component {
   };
   updateVotes() {
     this.setState({ votes: this.state.votes + 1 }, () => {
-      console.log(this.state.votes);
+      console.log("Success");
     });
   }
   voteHandler = () => {
     const { comment, renderComments, songId } = this.props;
     const commentId = comment._id;
-    console.log(commentId);
     axios
       .patch("http://localhost:8888/api/comments/vote", {
         id: commentId,
@@ -239,8 +238,6 @@ class CommentSingle extends Component {
 
   renderReplies() {
     const { comment, replies } = this.props;
-    console.log("comment is");
-    console.log(comment);
     var arr = [];
     if (comment.replies.length != 0) {
       // check reply array length, if > 1 then return comments.
@@ -326,11 +323,7 @@ class CommentSingle extends Component {
         if (response.data.votes) {
           var arr = [];
           arr = this.state.replyVotes;
-
           arr[index] = +response.data.votes;
-          console.log("arrrrr is");
-          console.log(arr);
-
           this.setState({
             replyVotes: arr,
           }); //thi.setState not working here.
@@ -377,8 +370,6 @@ class CommentSingle extends Component {
     var date = new Date(comment.dateTime);
     const timeStamp = date.customFormat("#DD# #MMMM# #YYYY# #hh#:#mm# #AMPM#");
     const relativeTime = ta.ago(date);
-    console.log("this is state");
-    console.log(this.state);
     return (
       <React.Fragment>
         <Card

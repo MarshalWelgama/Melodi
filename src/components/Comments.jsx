@@ -5,8 +5,6 @@ class Comments extends Component {
   state = {};
   renderComments() {
     const { comments, userId, isReplying } = this.props;
-    console.log("this is user id");
-    console.log(userId);
     var prettyComments = [];
     for (var i = 0; i < comments.length; i++) {
       if (comments[i].level == 0) {
@@ -14,7 +12,6 @@ class Comments extends Component {
       }
     }
 
-    console.log(prettyComments);
     return (
       <React.Fragment>
         {prettyComments.map((comment) => (
@@ -37,6 +34,7 @@ class Comments extends Component {
           display: "flex",
           justifyContent: "center",
           "text-align": "center",
+          backgroundColor: "rgb(252, 252, 252)",
         }}
       >
         <Comment.Group style={{ width: "100%" }} threaded>

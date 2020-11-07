@@ -24,7 +24,6 @@ class Song extends Component {
   constructor(props) {
     super(props);
     const songId = props.match.params.songId;
-    console.log("songId in constructor - ", songId);
     this.getSongDetails(songId);
   }
 
@@ -43,7 +42,7 @@ class Song extends Component {
         link: userData.data.link,
       };
       this.setState({ user });
-      console.log(this.state.user);
+
       // this.setState({ loggedIn: true });
     } else {
       console.log("ELSE TRIGGERED");
@@ -56,9 +55,6 @@ class Song extends Component {
       let songData = await axios.get(
         "http://localhost:8888/api/songs/".concat(songId)
       );
-
-      console.log("updated");
-      console.log(songData);
       if (songData.data) {
         let song = {
           name: songData.data.songName,
@@ -71,7 +67,6 @@ class Song extends Component {
       } else {
         console.log("NO SONGGG");
       }
-      console.log("this si song data", songData);
       return songData;
     } catch (error) {
       window.location.replace("/main");
@@ -86,7 +81,6 @@ class Song extends Component {
       userId: currentUserId,
     };
     this.setState({ replied });
-    console.log("sheeeeit");
     console.log(this.state);
   };
 
@@ -97,34 +91,9 @@ class Song extends Component {
 
   render() {
     const commentsArray = this.state.song.comments;
-    console.log(commentsArray);
     let commentsActive = Array.isArray(commentsArray) && commentsArray.length;
-    console.log(commentsActive);
     const { songId } = this.state.song;
     return (
-      // <div className="main-page container-fluid justify-content-center">
-      //   <div
-      //     className="row justify-content-center p-4"
-      //     style={{ height: "50%" }}
-      //   >
-      //     <img
-      //       src={this.state.song.albumArt}
-      //       style={{ maxWidth: "100%", maxHeight: "100%" }}
-      //     />
-      //   </div>
-      //   <div className="row my-auto" style={{ height: "50%" }}>
-      //     <div className="col">
-      //       <div className="row justify-content-center">
-      //         <h2 className="info-text"> {this.state.song.name}</h2>
-      //         {console.log(this.state.song.artist)}
-      //       </div>
-      //       <div>
-      //         {this.renderComments()}
-      //       </div>
-      //     </div>
-      //   </div>
-      // </div>
-
       <div className="main-page">
         <SongHeader
           albumArt={this.state.song.albumArt}
@@ -146,7 +115,7 @@ class Song extends Component {
           renderComments={this.getSongDetails}
           isReplying={this.state.replied}
         />
-        <div style={{ paddingBottom: "175px" }} />
+        <div style={{ paddingBottom: "130px" }} />
       </div>
     );
   }
