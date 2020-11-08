@@ -121,7 +121,11 @@ class CommentSingle extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ votes: nextProps.comment.votes });
+    var arr = [];
+    nextProps.comment.replies.length
+      ? nextProps.comment.replies.map(({ votes }, i) => (arr[i] = votes))
+      : console.log("No Reply");
+    this.setState({ votes: nextProps.comment.votes, replyVotes: arr });
   }
   AreYouSure = () => {
     var element = document.getElementById("popupDelete");
@@ -157,11 +161,11 @@ class CommentSingle extends Component {
         console.log(error);
       });
   };
-  deleteHandler = () => {
+  deleteHandler = (commentuserId, paramUserId) => {
     //only see if comment is something user posted
-    const { comment, userId } = this.props;
+    const { comment } = this.props;
 
-    if (comment.userId == userId) {
+    if (commentuserId == paramUserId) {
       return (
         <React.Fragment>
           <button onClick={this.AreYouSure} class="ui black basic button">
@@ -238,6 +242,7 @@ class CommentSingle extends Component {
 
   renderReplies() {
     const { comment, replies } = this.props;
+    console.log(comment);
     var arr = [];
     if (comment.replies.length != 0) {
       // check reply array length, if > 1 then return comments.
@@ -254,6 +259,7 @@ class CommentSingle extends Component {
           {arr.map(
             (
               {
+                userId,
                 dateTime,
                 text,
                 timeStamp,
@@ -303,6 +309,23 @@ class CommentSingle extends Component {
                       >
                         Vote
                       </a>
+                      <Popup
+                        id="popupDelete"
+                        trigger={
+                          <Button
+                            floated="right"
+                            basic
+                            icon
+                            size="mini"
+                            style={{ "box-shadow": "0 0 0 1px white inset" }}
+                          >
+                            <Icon name="ellipsis horizontal" />
+                          </Button>
+                        }
+                        content={this.deleteHandler(userId, this.props.userId)}
+                        on="click"
+                        hideOnScroll
+                      />
                     </Comment.Actions>
                   </Comment.Content>
                 </Comment>
@@ -416,7 +439,10 @@ class CommentSingle extends Component {
                       <Icon name="ellipsis horizontal" />
                     </Button>
                   }
-                  content={this.deleteHandler()}
+                  content={this.deleteHandler(
+                    this.props.comment.userId,
+                    this.props.userId
+                  )}
                   on="click"
                   hideOnScroll
                 />
