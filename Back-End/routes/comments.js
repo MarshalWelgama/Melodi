@@ -327,6 +327,29 @@ router.delete("/", getComment, async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+  let currentComment = res.comment[0];
+
+  if (currentComment.level >= 1) {
+    console.log("here");
+    let parent = await Comment.find({ _id: currentComment.parentId });
+    //console.log(parent);
+    let parentReplies = parent[0].replies;
+    console.log(currentComment._id);
+    // Modify parent replies
+    parentReplies = parentReplies.filter(
+      (item) => currentComment._id.toString() !== item._id.toString()
+    );
+    console.log(parentReplies);
+    const updatedParent = await Comment.findOneAndUpdate(
+      {
+        _id: currentComment.parentId,
+      },
+      {
+        replies: parentReplies,
+      },
+      { new: true }
+    );
+  }
 });
 
 async function getComment(req, res, next) {

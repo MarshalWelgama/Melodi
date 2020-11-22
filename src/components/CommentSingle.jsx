@@ -242,7 +242,7 @@ class CommentSingle extends Component {
 
   renderReplies() {
     const { comment, replies } = this.props;
-    console.log(comment);
+
     var arr = [];
     if (comment.replies.length != 0) {
       // check reply array length, if > 1 then return comments.
