@@ -127,7 +127,8 @@ class CommentSingle extends Component {
       : console.log("No Reply");
     this.setState({ votes: nextProps.comment.votes, replyVotes: arr });
   }
-  AreYouSure = () => {
+  AreYouSure = (commentId) => {
+    console.log(commentId);
     var element = document.getElementById("popupDelete");
     element.style.transform = "scale(0)";
 
@@ -137,7 +138,7 @@ class CommentSingle extends Component {
       buttons: [
         {
           label: "Yes",
-          onClick: this.handleDeleteClick,
+          onClick: () => this.handleDeleteClick(commentId),
         },
         {
           label: "No",
@@ -146,9 +147,9 @@ class CommentSingle extends Component {
       ],
     });
   };
-  handleDeleteClick = () => {
+  handleDeleteClick = (commentId = this.props.comment._id) => {
+    console.log(commentId);
     const { renderComments, songId, comment } = this.props;
-    const commentId = comment._id;
     axios
       .delete("http://localhost:8888/api/comments/", {
         data: { id: commentId },
@@ -161,14 +162,18 @@ class CommentSingle extends Component {
         console.log(error);
       });
   };
-  deleteHandler = (commentuserId, paramUserId) => {
+  deleteHandler = (commentuserId, paramUserId, commentId) => {
     //only see if comment is something user posted
     const { comment } = this.props;
 
     if (commentuserId == paramUserId) {
+      console.log(commentId);
       return (
         <React.Fragment>
-          <button onClick={this.AreYouSure} class="ui black basic button">
+          <button
+            onClick={() => this.AreYouSure(commentId)}
+            class="ui black basic button"
+          >
             Delete
           </button>
           <button class="ui orange basic button" onClick={this.reportComment}>
@@ -322,7 +327,9 @@ class CommentSingle extends Component {
                             <Icon name="ellipsis horizontal" />
                           </Button>
                         }
-                        content={this.deleteHandler(userId, this.props.userId)}
+                        content={() =>
+                          this.deleteHandler(userId, this.props.userId, _id)
+                        }
                         on="click"
                         hideOnScroll
                       />

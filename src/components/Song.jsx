@@ -91,6 +91,7 @@ class Song extends Component {
 
   render() {
     const commentsArray = this.state.song.comments;
+    console.log(commentsArray);
     let commentsActive = Array.isArray(commentsArray) && commentsArray.length;
     const { songId } = this.state.song;
     console.log(commentsArray);

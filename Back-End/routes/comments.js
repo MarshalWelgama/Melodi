@@ -330,7 +330,6 @@ router.delete("/", getComment, async (req, res) => {
   let currentComment = res.comment[0];
 
   if (currentComment.level >= 1) {
-    console.log("here");
     let parent = await Comment.find({ _id: currentComment.parentId });
     //console.log(parent);
     let parentReplies = parent[0].replies;

@@ -26,12 +26,15 @@ router.get("/current", function (req, res) {
   spotifyApi
     .getMe()
     .then((response) => {
+      console.log("here");
+      console.log(response);
       if (response) {
         User.find({ userId: response.body.id }, function (err, docs) {
           if (docs.length > 0) {
             console.log(docs[0]);
             res.json(docs[0]);
           } else {
+            console.log("here");
             console.log(response.body.images);
             userData = {
               userId: response.body.id,
