@@ -317,17 +317,25 @@ router.patch("/reply", getComment, async (req, res) => {
 
 // Deleting a comment
 router.delete("/", getComment, async (req, res) => {
-  try {
-    await Comment.findOneAndDelete({
-      songId: res.comment[0].songId,
-      dateTime: res.comment[0].dateTime,
-      userId: res.comment[0].userId,
-    });
-    res.json({ message: "Deleted comment" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+ 
+
   let currentComment = res.comment[0];
+  var commentId = currentComment._id
+  // if (currentComment.level == 0){
+  //   try {
+  //     console.log('herere')
+  //     console.log(currentComment._id)
+  //     var commentId = currentComment._id
+
+  //     await Comment.deleteMany({
+  //       parentId: commentId
+  //     });
+  //     res.json({ message: "Deleted comment" });
+  //   } catch (err) {
+  //     res.status(500).json({ message: err.message });
+  //   }
+    
+  // }
 
   if (currentComment.level >= 1) {
     let parent = await Comment.find({ _id: currentComment.parentId });
@@ -348,6 +356,20 @@ router.delete("/", getComment, async (req, res) => {
       },
       { new: true }
     );
+  }
+
+   try {
+    await Comment.findOneAndDelete({
+      songId: res.comment[0].songId,
+      dateTime: res.comment[0].dateTime,
+      userId: res.comment[0].userId,
+    });
+    await Comment.deleteMany({
+      parentId: commentId
+    });
+    res.json({ message: "Deleted comment" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
