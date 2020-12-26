@@ -77,7 +77,7 @@ app.use("/api/songs", songsRouter);
 const commentsRouter = require("./routes/comments");
 app.use("/api/comments", commentsRouter);
 
-app.get("/login", function (req, res) {
+app.get("/api/login", function (req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -96,7 +96,7 @@ app.get("/login", function (req, res) {
   );
 });
 
-app.get("/callback", function (req, res) {
+app.get("/api/callback", function (req, res) {
   // your application requests refresh and access tokens
   // after checking the state parameter
 
@@ -131,7 +131,7 @@ app.get("/callback", function (req, res) {
         refresh_token = body.refresh_token;
         spotifyApi.setAccessToken(access_token);
 
-        res.redirect("http://localhost:3000/main/");
+        res.redirect("http://melodi.app/main/");
       } else {
         res.json({
           error: "invalid_token",
@@ -141,7 +141,7 @@ app.get("/callback", function (req, res) {
   }
 });
 
-app.get("/refresh_token", function (req, res) {
+app.get("/api/refresh_token", function (req, res) {
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
   var authOptions = {
