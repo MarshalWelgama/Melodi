@@ -70,7 +70,7 @@ class TextInput extends Component {
 
     if (isReplying.active) {
       axios
-        .patch("http://localhost:8888/api/comments/reply", {
+        .patch("https://melodi.app/api/comments/reply", {
           id: `${isReplying.id}`, //song ID
           text: commentInput, //Input
         })
@@ -85,7 +85,7 @@ class TextInput extends Component {
       this.setState({ commentInput: "" });
     } else {
       axios
-        .post("http://localhost:8888/api/comments/", {
+        .post("https://melodi.app/api/comments/", {
           songId: songId, //song ID
           text: commentInput, //Input
         })

@@ -15,7 +15,7 @@ class TopCommentsContainer extends Component {
 
   getRecentDetails = async () => {
     let RecentCommentData = await axios.get(
-      "http://localhost:8888/api/comments/Top"
+      "https://melodi.app/api/comments/Top"
     );
     if (RecentCommentData.data) {
       let commentData = [];

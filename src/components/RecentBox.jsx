@@ -35,7 +35,7 @@ class RecentBox extends Component {
           <Card.Content
             onClick={() => {
               window.location.replace(
-                `http://localhost:3000/songs/${details.songId}`
+                `https://melodi.app/songs/${details.songId}`
               );
             }}
             className="song-line"

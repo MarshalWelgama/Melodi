@@ -14,7 +14,7 @@ class LandingPage extends Component {
       <br></br>
       <div className="CallToAction">
         <div style={{"display" : "inline-block"}}>
-        <a style={{"text-decoration":'none', 'color':'black'}}href="http://localhost:8888/login" className="login-button">
+        <a style={{"text-decoration":'none', 'color':'black'}}href="https://melodi.app/api/login" className="login-button">
           LOGIN WITH SPOTIFY
         </a>
         </div>

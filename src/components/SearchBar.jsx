@@ -24,7 +24,7 @@ class SearchBar extends Component {
   // Filter logic
   getSuggestions = async (value) => {
     let results = await axios.get(
-      `http://localhost:8888/api/songs/search/${value}`
+      `https://melodi.app/api/songs/search/${value}`
     );
 
     return results.data;
@@ -79,7 +79,7 @@ class SearchBar extends Component {
     { suggestion, suggestionValue, index, method }
   ) => {
     event.preventDefault();
-    const songUrl = `http://localhost:3000/songs/${suggestion.songId}`;
+    const songUrl = `https://melodi.app/songs/${suggestion.songId}`;
     console.log("ping... ", suggestion);
     window.location.replace(songUrl);
   };

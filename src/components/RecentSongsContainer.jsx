@@ -15,7 +15,7 @@ class RecentSongsContainer extends Component {
 
   getRecentDetails = async () => {
     let RecentCommentData = await axios.get(
-      "http://localhost:8888/api/comments/recent"
+      "https://melodi.app/api/comments/recent"
     );
 
     if (RecentCommentData.data) {

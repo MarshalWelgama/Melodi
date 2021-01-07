@@ -32,7 +32,7 @@ class Song extends Component {
   }
 
   getUserDetails = async () => {
-    let userData = await axios.get("http://localhost:8888/api/users/current");
+    let userData = await axios.get("https://melodi.app/api/users/current");
     let user;
     if (userData.data.userId) {
       user = {
@@ -53,7 +53,7 @@ class Song extends Component {
   getSongDetails = async (songId) => {
     try {
       let songData = await axios.get(
-        "http://localhost:8888/api/songs/".concat(songId)
+        "https://melodi.app/api/songs/".concat(songId)
       );
       if (songData.data) {
         let song = {

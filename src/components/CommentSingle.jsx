@@ -151,7 +151,7 @@ class CommentSingle extends Component {
     console.log(commentId);
     const { renderComments, songId, comment } = this.props;
     axios
-      .delete("http://localhost:8888/api/comments/", {
+      .delete("https://melodi.app/api/comments/", {
         data: { id: commentId },
       })
       .then(function (response) {
@@ -207,7 +207,7 @@ class CommentSingle extends Component {
     const { comment, renderComments, songId } = this.props;
     const commentId = comment._id;
     axios
-      .patch("http://localhost:8888/api/comments/vote", {
+      .patch("https://melodi.app/api/comments/vote", {
         id: commentId,
       })
       .then((response) => {
@@ -346,7 +346,7 @@ class CommentSingle extends Component {
   replyVoteHandler = (prop, index) => {
     console.log(prop);
     axios
-      .patch("http://localhost:8888/api/comments/vote", {
+      .patch("https://melodi.app/api/comments/vote", {
         id: prop,
       })
       .then((response) => {

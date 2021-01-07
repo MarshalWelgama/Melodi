@@ -20,7 +20,7 @@ class Main extends Component {
   }
 
   getUserDetails = async () => {
-    let userData = await axios.get("http://localhost:8888/api/users/current");
+    let userData = await axios.get("https://melodi.app/api/users/current");
     if (userData.data.userId) {
       console.log(userData.data)
       this.setState({ loggedIn: true });
@@ -32,7 +32,7 @@ class Main extends Component {
 
   getNowPlaying = async () => {
     let nowPlayingData = await axios.get(
-      "http://localhost:8888/api/songs/current"
+      "https://melodi.app/api/songs/current"
     );
     if (nowPlayingData.data) {
       let nowPlaying = {
@@ -40,7 +40,7 @@ class Main extends Component {
         albumArt: nowPlayingData.data.albumArt,
       };
       this.setState({ nowPlaying });
-      window.location.href = "http://localhost:3000/songs/".concat(
+      window.location.href = "https://melodi.app/songs/".concat(
         nowPlayingData.data.songId
       );
     } else {
@@ -53,7 +53,7 @@ class Main extends Component {
   render() {
     return (
       <React.Fragment>
-
+        
         {this.state.loggedIn && (
           <div className="main-page">
             <div className="melodi-header">
