@@ -40,6 +40,8 @@ const Main = () => {
 
   const setToken = () => {
     if (access_token_url) {
+      localStorage.setItem("access_token", access_token_url);
+      localStorage.setItem("refresh_token", refresh_token_url);
       setAccessToken(access_token_url);
       setResfreshToken(refresh_token_url);
       spotifyApi.setAccessToken(access_token_url);
