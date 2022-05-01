@@ -1,7 +1,6 @@
 // server.autosuggest.js
 import React, { Component } from "react";
 import Autosuggest from "react-autosuggest";
-import axios from "axios";
 import * as _ from "lodash";
 import "./Main.css";
 class SearchBar extends Component {
@@ -23,11 +22,31 @@ class SearchBar extends Component {
 
   // Filter logic
   getSuggestions = async (value) => {
-    let results = await axios.get(
-      `http://localhost:8888/api/songs/search/${value}`
-    );
+    const spotifyApi = this.props.spotify;
+    let tracks = [];
+    let results = await spotifyApi.searchTracks(value);
 
-    return results.data;
+    let searchResults = results.body.tracks.items;
+    if (searchResults.length > 0) {
+      for (var i = 0; i < searchResults.length; i++) {
+        try {
+          let track = {
+            songId: searchResults[i].id,
+            name: searchResults[i].name,
+            artist: searchResults[i].artists.map((artist) => artist.name),
+            albumName: searchResults[i].album.name,
+            image: searchResults[i].album.images[0].url,
+            previewURL: searchResults[i].preview_url,
+          };
+          tracks.push(track);
+        } catch (err) {
+          continue;
+        }
+      }
+      return tracks;
+    } else {
+      console.log("No search results found");
+    }
   };
 
   // Trigger suggestions

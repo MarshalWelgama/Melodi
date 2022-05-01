@@ -226,7 +226,7 @@ router.post("/", async (req, res) => {
 // Updating a comment - liking it
 router.patch("/vote", getComment, async (req, res) => {
   try {
-    let currentUserId = await getCurrentUserId();
+    let currentUserId = await getCurrentUserId(); //instead of this function we will need to pass in the user ID in the req.body
 
     if (res.comment[0].votesUsers.includes(currentUserId)) {
       res.json({ message: "User already upvoted comment" });

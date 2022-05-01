@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import qs from "qs";
 import "./Main.css";
 import axios from "axios";
 import { Search } from "semantic-ui-react";
 import SpotifyWebApi from "spotify-web-api-node";
+import { useLocation, useHistory } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import FooterInfo from "./FooterInfo";
 import RecentSongsContainer from "./RecentSongsContainer";
@@ -20,102 +21,96 @@ const spotifyApi = new SpotifyWebApi({
   redirectUri: redirect_uri,
 });
 
-class Main extends Component {
-  state = {
-    access_token: "",
-    loggedIn: false,
-    nowPlaying: { name: "Not Checked", albumArt: "" },
-  };
+const Main = () => {
+  const [access_token, setAccessToken] = useState("");
+  const [refresh_token, setResfreshToken] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
+  // const [nowPlaying, setnowPlaying] = useState({
+  //   name: "Not Checked",
+  //   albumArt: "",
+  // });
+  const search = useLocation().search;
+  const access_token_url = new URLSearchParams(search).get("access_token");
+  const refresh_token_url = new URLSearchParams(search).get("refresh_token");
+  const history = useHistory();
+  useEffect(() => {
+    setToken();
+    getInfo();
+  }, []);
 
-  componentDidMount() {
-    //const queryValues = queryString(UrlQueryStrings);
-    // const { access_token } = this.props.match.params;
-    this.getUserDetails();
-  }
-
-  getUserDetails = async () => {
-    const access_token = qs.parse(this.props.location.search, {
-      ignoreQueryPrefix: true,
-    }).access_token;
-
-    this.setState({ access_token: access_token });
-
-    if (access_token) {
-      spotifyApi.setAccessToken(access_token);
-      this.props.history.replace("/main");
-      console.log("reaplced");
-      spotifyApi.getMe().then((response) => {
-        if (response) {
-          console.log(response.body);
-        }
-      });
-      console.log("logged in");
-      this.setState({ loggedIn: true });
-    } else {
-      console.log("ELSE TRIGGERED");
+  const setToken = () => {
+    if (access_token_url) {
+      setAccessToken(access_token_url);
+      setResfreshToken(refresh_token_url);
+      spotifyApi.setAccessToken(access_token_url);
+      spotifyApi.setRefreshToken(refresh_token_url);
+      setLoggedIn(true);
+      history.replace("/main");
     }
   };
 
-  // getNowPlaying = async () => {
-  //   let nowPlayingData = await axios.get(
-  //     "http://localhost:8888/api/songs/current"
-  //   );
-  //   if (nowPlayingData.data) {
-  //     let nowPlaying = {
-  //       name: nowPlayingData.data.name,
-  //       albumArt: nowPlayingData.data.albumArt,
-  //     };
-  //     this.setState({ nowPlaying });
-  //     window.location.href = "http://localhost:3000/songs/".concat(
-  //       nowPlayingData.data.songId
-  //     );
-  //   } else {
-  //     console.log("ELSE TRIGGERED");
-  //   }
-  //   return nowPlayingData;
-  // };
+  const getInfo = () => {
+    spotifyApi.getMe().then((response) => {
+      if (response) {
+        console.log(response.body);
+      }
+    });
+  };
 
-  render() {
-    return (
-      <React.Fragment>
-        {this.state.loggedIn && (
-          <div className="main-page">
-            <div className="melodi-header">
-              <header>
-                <img
-                  className="header-img"
-                  src="/melodi-logo.png"
-                  verticalAlign="top"
-                />{" "}
-              </header>
-            </div>
-            <div>
-              <h1 className="title">Where to?</h1>
-            </div>
-            <div className="main-actions">
-              <a
-                href="#"
-                style={{ "text-decoration": "none", color: "black" }}
-                className="main-button"
-                onClick={() => console.log(this.state)}
-              >
-                Now Playing
-              </a>
-              <div className="search-bar">
-                <SearchBar></SearchBar>
-              </div>
-            </div>{" "}
-            {/*main actions*/}
-            <div className="quick-actions">
-              <RecentSongsContainer />
-              <TopCommentsContainer />
-            </div>
-            <FooterInfo className="footer-info" />
+  const getNowPlaying = async () => {
+    let track = await spotifyApi.getMyCurrentPlayingTrack().catch((err) => {
+      console.log("Error when retrieving song - ", err);
+      if (err.statusCode === 401) {
+        console.log("Unauthorised access - sign in using Spotify again");
+      }
+    });
+    if (track.body) {
+      // window.location.href = "http://localhost:3000/songs/".concat(
+      //   track.body.item.id
+      // );
+      console.log(track.body.item);
+    }
+  };
+
+  return (
+    <React.Fragment>
+      {loggedIn && (
+        <div className="main-page">
+          <div className="melodi-header">
+            <header>
+              <img
+                className="header-img"
+                src="/melodi-logo.png"
+                verticalAlign="top"
+              />{" "}
+            </header>
           </div>
-        )}
-      </React.Fragment>
-    );
-  }
-}
+          <div>
+            <h1 className="title">Where to?</h1>
+          </div>
+          <div className="main-actions">
+            <a
+              href="#"
+              style={{ "text-decoration": "none", color: "black" }}
+              className="main-button"
+              onClick={() => getNowPlaying()}
+            >
+              Now Playing
+            </a>
+            <div className="search-bar">
+              <SearchBar spotify={spotifyApi}></SearchBar>
+            </div>
+          </div>{" "}
+          {/*main actions*/}
+          <div className="quick-actions">
+            <RecentSongsContainer />
+            <TopCommentsContainer />
+          </div>
+          <FooterInfo className="footer-info" />
+        </div>
+      )}
+    </React.Fragment>
+  );
+};
 
 export default Main;
